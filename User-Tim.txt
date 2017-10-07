@@ -1,0 +1,35 @@
+Hi, my name is '''Tim Gerundt''', I am 27 years old and live in Germany. I am the ''Web Designer'' from WinMerge team. But I also translate WinMerge to German, test the latest experimental builds or do small changes to the manual. ;-)
+
+==Web Tasks==
+*Change "pre.code" to manual style
+*Change link colors
+*Change to nicer mail addresses
+*Problems with banner in small browser windows
+*Add bug/rfe links to known limitation items
+*Create sitemap.txt on-the-fly.
+*Add awards page
+*Developer Blog? (''kimmov: sounds ok, though maybe you should first ask in mailing list if there is interest among developers... I've seen so many blogs with one or two posts...'')
+
+==Manual Tasks==
+*Make new VSS screenshots? Christian has still access to VSS!
+*Remove "@echo on" from "build_html.bat" and "build_htmlhelp.bat"
+*Use new "Verdana" font code
+*Complete ''10. Options & configuration'':
+**Compare options
+***'''Add:''' Comments
+**'''Add:''' Colors?
+**'''Add:''' Text Colors?
+**'''Add:''' Syntax Colors?
+**'''Add:''' Version Control?
+*Use "print.css" for htmlhelp too?
+
+==Developers Docs Tasks==
+*<strike>Add &lt;h4&gt; style to [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-developers.html readme-developers.html]</strike> {{Patch|1589578|Patch 1589578}}
+*<strike>Change to "Verdana" font too?</strike> {{Patch|1658383|Patch 1658383}}
+
+==WinMerge Tasks==
+*<strike>Add Vista icons (256x256) to WinMerge, if we found a resolution for the big lang file size</strike> {{Patch|1684865|Patch 1684865}}
+
+==Translation Tasks==
+*Move some strings (like copepage number) from PO files to a external text file.
+*Translate ReadMe.txt to German

@@ -1,0 +1,19 @@
+''Tracker Shortcuts'' are shorter and nicer URLs to [http://sourceforge.net/tracker/?group_id=13216 Tracker] items from our [http://sourceforge.net/projects/winmerge SF.net project page]:
+
+;Bug:<nowiki>http://winmerge.org/bug/</nowiki>''bug-id''
+;Patch:<nowiki>http://winmerge.org/patch/</nowiki>''patch-id''
+;Support Request:<nowiki>http://winmerge.org/support/</nowiki>''support-id''
+;Feature Request:<nowiki>http://winmerge.org/rfe/</nowiki>''rfe-id''
+;Todo Item:<nowiki>http://winmerge.org/todo/</nowiki>''todo-id''
+;Tracker Item:<nowiki>http://winmerge.org/tracker/</nowiki>''tracker-id''
+
+You can use this [http://winmerge.org/support/tracker-shortcuts.php online generator] to create the shortcuts.
+
+== <span id="templates">Wiki Templates</span> ==
+We have some templates, which helps you with the tracker shortcuts on this Wiki:
+;Bug:<code><nowiki>{{</nowiki>Bug|''bug-id''|''link text''<nowiki>}}</nowiki></code>
+;Patch:<code><nowiki>{{</nowiki>Patch|''patch-id''|''link text''<nowiki>}}</nowiki></code>
+;Support Request:<code><nowiki>{{</nowiki>Support|''support-id''|''link text''<nowiki>}}</nowiki></code>
+;Feature Request:<code><nowiki>{{</nowiki>RFE|''rfe-id''|''link text''<nowiki>}}</nowiki></code>
+;Todo Item:<code><nowiki>{{</nowiki>Todo|''todo-id''|''link text''<nowiki>}}</nowiki></code>
+;Tracker Item:<code><nowiki>{{</nowiki>Tracker|''tracker-id''|''link text''<nowiki>}}</nowiki></code>

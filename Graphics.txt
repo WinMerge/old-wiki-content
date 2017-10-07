@@ -1,0 +1,235 @@
+== Application Icon ==
+[[Image:Application icons.png|thumb|200px|right|WinMerge Application Icons]]
+WinMerge utilizes two primary icons.  The lowest resolution available being 16x16 at 16 colors and the highest being 512x512 at 16.7 million colors.
+=== Icon Specification ===
+
+
+The table below displays the current specification for the primary application icon and the project file type icon.  As both icons are maintained concurrently, only one chart is needed.
+
+
+
+
+{| class="wikitable" style="font-size: smaller; text-align: center; width: 100%; table-layout: fixed;"
+|-
+! style="background: #dddddd" | Resolution 
+! style="background: #dddddd" | Bit Depth
+! style="background: #dddddd" | Colors
+! style="background: #dddddd" | Palette
+! style="background: #dddddd" | Available
+! style="background: #dddddd" | In Production
+|-
+! style="background: #dddddd" | 16x16
+! 4
+! 16
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 16x16
+! 8
+! 256
+! style="background: #dfdfff" | Indexed
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 16x16
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 32x32
+! 4
+! 16
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 32x32
+! 8
+! 256
+! style="background: #dfdfff" | Indexed
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 32x32
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 48x48
+! 4
+! 16
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 48x48
+! 8
+! 256
+! style="background: #dfdfff" | Indexed
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 48x48
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 128x128
+! 4
+! 16
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 128x128
+! 8
+! 256
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 128x128
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 256x256
+! 4
+! 16
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 256x256
+! 8
+! 256
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 256x256
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ddffdd" | Yes
+! style="background: #ddffdd" | Yes
+|-
+! style="background: #dddddd" | 512x512
+! 4
+! 16
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 512x512
+! 8
+! 256
+! -
+! style="background: #ffdddd" | No
+! style="background: #ffdddd" | No
+|-
+! style="background: #dddddd" | 512x512
+! 32 (alpha)
+! 16m
+! System
+! style="background: #ffffdd;" | As Source
+! style="background: #ffdddd" | No
+|-
+|}
+
+=== Vista Support ===
+
+A 256x256 resolution icon is now available.  PNG Compression on this size is not currently implemented.
+
+Windows Vista supports PNG compression of large icons (recommended).  There have been instances where the use of PNG compression has caused all versions of the icon in the set to fail rendering in Windows 2000; and presumably any OS version below that will have the same effect.
+
+== Splash Screen ==
+[[Image:Winmerge_Splash_v2_8.png|thumb|200px|right|WinMerge Splash Screen Empty]]
+[[Image:Winmerge_Splash_v2_8_Populated.png|thumb|200px|right|WinMerge Splash Screen Populated]]
+
+=== Specification ===
+{| class="wikitable" style="font-size: smaller; text-align: center; width: 500px; table-layout: fixed;"
+|-
+! style="background: #dddddd" | Dimensions
+! 550x350
+|-
+! style="background: #dddddd" | WinMerge Font
+! HandelGothic BT
+|-
+! style="background: #dddddd" | Colors
+! #000000 (Win) and #570101 (Merge)
+|-
+! style="background: #dddddd" | Format
+! Uncompressed JPEG
+|-
+|}
+
+=== Populating Text ===
+Splash screen texts (version number, developers list and copyright) are populated from resource strings. Text layout and font is hard-coded in <code>Src/Splash.cpp</code>.
+
+
+
+
+
+
+
+
+== Tool bar Icons ==
+[[Image:Toolbar.png|thumb|350px|right|WinMerge Tool bars]]
+The tool bar bitmap resources are located in <code>Src/res/</code>.
+{| class="wikitable" style="font-size: smaller; text-align: center; width: 500px; table-layout: fixed;"
+|-
+! style="background: #dddddd" | Dimensions
+! 32x31 / 16x15
+|-
+! style="background: #dddddd" | Transparency
+! 1-Bit
+|-
+! style="background: #dddddd" | Transparency Color
+! 255,0,255 (Magenta)
+|-
+! style="background: #dddddd" | Format
+! 24 Bit (Bitmap)
+|-
+! style="background: #dddddd" | Disabled Colors
+! No Saturation (Gray scale) / +55 Lightness
+|-
+|}
+Icon order from left to right:<br/>
+<code>New Document, Open Document, Save, Undo, Redo, Difference in the Current Line, Next Diff, Prev Diff, First Diff, Last Diff, Copy Right, Copy Left, Copy Right and Advance, Copy Left and Advance, Preferences, All Right, All Left, Refresh.</code>
+=== Small ===
+Enabled Filename: <code>/Src/res/ToolBarEnabled.bmp</code><br/>
+Disabled Filename: <code>/Src/res/ToolBarDisabled.bmp</code>
+
+The context menus make use of the small tool bar icons.
+
+=== Large ===
+Enabled Filename: <code>/Src/res/ToolBarEnabled32.bmp</code><br/>
+Disabled Filename: <code>/Src/res/ToolBarDisabled32.bmp</code>
+
+The Large tool bar was implemented in 2.7.4.0 Beta and will be released officially in 2.8.0 Stable.
+
+=== Development ===
+The toolbar and context menu graphic structure is maintained by the BCMenu Class.
+<code>/Src/BCMenu.cpp</code>
+
+[http://www.codeproject.com/menu/bcmenu.asp BCMenu] at The Code Project.
+
+=== Ideas ===
+* Alpha channel support so that we may use variable transparency and anti-aliasing for the tool bar icons.
+
+
+== Context Menus ==
+---
+
+== Graphic Designer ==
+*[mailto:neonapple%20at%users%20dot%20sourceforge%20dot%20net Alexander Skinner] - Logo, Icons, Toolbar, and Splash (since 2.5.3.4).

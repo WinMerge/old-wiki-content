@@ -1,0 +1,154 @@
+This page contains information about various development-related topics.
+
+There are separate pages about [[Coding Guidelines|coding guidelines]] and [[Submit Patch|patch submitting]].
+
+Our [[Development Model|development model]] is described in its own page.
+
+= Goal of WinMerge =
+Goal of WinMerge development is to make comparing and synch/merge of folders and files easy and fast. While maintaining maximum reliability. As easy of use reduces errors. WinMerge goal is not to copy another programs, or even just to be a cheap alternative to commercial programs (although we are good at that?).
+
+WinMerge wants to innovate, we like to find ways to make things easier! And so we want to make things different ways than many other programs do.
+
+This does not mean we do not want to be ''consistent'' with other programs. Consistency is important, but it must not prevent us doing this better ways. Being consistent with shortcut keys is a good thing. Requiring consistency for how we handle differences or how we show them is not.
+
+= Development Documentation =
+This wiki has lots of good development documentation. And new documentation is preferred to be added here.
+
+However, some basic documentation is good to be kept with sources, at least documentation helping compiling etc. People may be developing WinMerge without internet access, so they can't read this wiki.
+
+In source distribution, there is ''Docs'' top-level folder for documentation.
+
+= Getting Sources =
+First thing you need is latest WinMerge sources. We use Sourceforge.net's [http://sourceforge.net/svn/?group_id=13216 Subversion] service as our version control system. Our Subversion-documentation is in subversion too:
+[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-Subversion.html readme-subversion].
+
+If you have difficulties with subversion, you can [http://sourceforge.net/project/showfiles.php?group_id=13216 download] latest development release (beta/experimental) sources.
+
+== Clone Subversion Repository ==
+If you feel adventurous, you can also copy the whole WinMerge subversion repository. SourceForge.net documents this for backups. But if you want/need to study lots of diffs/logs from the repository, local copy is definitely a lot faster than sourceforge.net repository.
+
+As of 2007-07-08 the size of repository is about 113 MB. 
+
+Oh, and we also appreciate people copy the repository, so we have more backups around. :)
+
+The repository can be cloned by using tool called rsync. In Windows, the best option to use rsync is to install cygwin (+rsync + subversion). In cygwin, create a new directory for the repository and give a command:
+<code>
+rsync -av winmerge.svn.sourceforge.net::svn/winmerge/* winmerge
+</code>
+
+After a while you have your own copy of WinMerge repository!
+
+= Working with Subversion =
+Our repository layout is:
+ |-trunk
+ |
+ |-branches
+ | |-R2_6
+ | |-R2_8
+ | |-R2_10
+ |
+ |-tags
+ | |-R2_6_6
+ | |-R2_6_8
+ | |-...
+
+''Main development always happens in the trunk.''
+
+Tags are created for every stable- and beta-release. Tags allow easy access to certain release's sources. Tags can be created for other important checkpoints too, but so far we haven't added any such tags.
+
+Every stable series (2.8.x) has its own stable branch. The stable branch idea is that after a first stable release in the series (2.8.0) we only apply selected bugfixes to the next stable release (2.8.x). This way we try to avoid adding new bugs to stable releases.
+
+A branch can also be created for helping the development of certain large features/changes. When developing in the branch, there is no interference from other development (which could otherwise cause lot of merging of patches and solving conflicts). And also complex development can use advantage of version control without needing to apply work in progress patches to trunk. If the development succeeds we later merge the branch to the trunk.
+
+Current development branches are:
+* <strike>PO_translations_test - for developing PO-files based translation system (Tim)</strike>
+
+= Compiling =
+WinMerge is straightforward to compile after your environment is set up. Look at [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/Compiling.html compiling] for more information. 
+[http://svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-developers.html readme-developers] also contains important information. 
+
+'''Note:''' if you are compiling stable versions of WinMerge then look at these documents:
+* WinMerge 2.6.x - [http://svn.sourceforge.net/viewvc/*checkout*/winmerge/branches/R2_6/Docs/Developers/readme-developers.html readme-developers]
+* WinMerge 2.8.x - [http://svn.sourceforge.net/viewvc/*checkout*/winmerge/branches/R2_8/Docs/Developers/readme-developers.html readme-developers]
+
+In short, WinMerge needs two libraries compiled before the WinMerge executable can be linked:
+* expat
+* scew
+
+Each have their own workspaces and/or projects.
+
+See [[Releases]] page for more information about compiling a WinMerge (release).
+
+===Compiling 64-bit===
+64-bit Windows installations are still pretty rare. But luckily one can cross-compile 64-bit binaries in 32-bit Windows. And actually 64-bit shell extension versions have been cross-compiled from beginning.
+
+Shell extension's build instructions can be adapted to also WinMerge executable compiling.
+
+If you are using Visual Studio 2005, then you only need to create new x64 target:
+# open Configuration Manager from Build-menu
+# select Platform-column's combobox in table
+# select New...
+# In dialog, select New Platform as x64 and Copy Settings from Win32
+
+Now when you want to do a 64-bit compile, just select x64 target.
+
+Note that 64-bit compile emits a lot of warnings. If you have time to look at those, it would be great...
+
+=== Compile problems ===
+Please report compile problems to our [http://sourceforge.net/tracker/?group_id=13216&atid=113216 bug-tracker].
+
+= Some Development Areas =
+
+== Windows Vista support ==
+'''TODO:''' What we need for this?
+
+Done so far:
+* 2.7.2 and later have Vista security attributes set in manifest file.
+
+This is mostly unknown area still. WinMerge 2.6 should work nicely in Vista, but nobody has done extensive testing yet. No problems have been reported by users either.
+
+=== Installer ===
+Installer seems to have problem of missing some info / manifest. As it warns user about untrusted application. This should be studied why? '''Note''': user has reported that this warning happens with XP also.
+
+Installer needs to be signed with certificate to suppress those security warnings? We don't have certificate for WinMerge!
+
+=== UAC (User Access Control) ===
+Vista finally should allow sensible use of programs as non-priviledged user. We don't know how WinMerge works as normal user. There should not be any big problems as we don't store data-files to program files folder, and use private branch in registry etc. But this should be tested to be sure.
+
+== 64-bit Windows support ==
+64-bit Windows versions require that all components in same process must be either 32-bit or 64-bit. This means that Shell Extension must be 64-bit as it is loaded by 64-bit system process (Explorer). WinMerge 2.6 and later has already 64-bit ShellExtension.
+
+However, there is no immediate need for 64-bit WinMerge executable. 64-bit Windows can run 32-bit executables just fine. And as WinMerge does not have external dependencies to 64-bit code WinMerge can be 32-bit.
+
+Current SVN trunk sources for WinMerge executable compile already fine for 64-bit targets. Status of expat, SCEW and PCRE libraries is unknown.
+
+=== 64-bit coding/converting code ===
+Most important change for 64-bit support is that pointers are 64-bit, but integer is 32-bit. So one cannot anymore store pointers to integers. Visual Studio 2003 and 2005 show nice warnings about these.
+
+Most common problem is that pointer is stored to DWORD or (U)INT types. Those should be usually converted to UINT_PTR types. Also some pointer calculations might need fixing.
+
+=== 64-bit project files for VS2008 ===
+There are project files for compiling 64-bit versions of WinMerge executable and needed libraries. These project files are named as <code>''[projectname]''X64.vcproj</code> and <code>''[projectname]''X64.sln</code>. These project files are for VS2008 at the moment.
+
+'''Note:''' ShellExtension is a real and tested 64-bit version and its project files work for VS2003 and later versions.
+
+== Cross-platform Development ==
+See [[CrossPlatform]].
+
+== Long Filenames Support ==
+Currently WinMerge support path length of traditional 255 characters.
+
+However, modern Windows versions support up to 32K character paths. Supporting such long filenames is huge change all over our code, but we must start thinking about it...
+
+<div class="warning">
+Extra care is needed with this, since not even all programs coming with Windows can handle these long paths. For example Windows Explorer cannot handle long paths in XP or earlier Windows versions. Same goes for cmd.exe and so on.
+</div>
+
+One obstacle is diffutils code. Diffutils (in <code>/Src/diffutils/</code> -folder) has its own file handling routines.
+
+=== Code Changes ===
+Read first this [http://msdn2.microsoft.com/en-us/library/aa365247.aspx Naming a File (Windows) -article] in MSDN about file naming. In short, every long path have string <code>\\?\</code> in the beginning. For example: <code>\\?\C:\Very Long Path\</code>.
+
+We must change every path/filename handling function in WinMerge to recognize that prefix in paths. And add the prefix when formatting new paths.
+
+Also, we cannot use hard-coded <code>_MAX_PATH</code> -length TCHAR tables for file/pathnames. So TCHARs have to be replaced with Strings.

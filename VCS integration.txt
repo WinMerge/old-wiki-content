@@ -1,0 +1,58 @@
+One handy way to use WinMerge is as version control software's diff/merge tool. Or let WinMerge to access Version Control Software functions.
+
+== Integration basics ==
+There are different ways to integrate WinMerge with them:
+
+# Using version control software specific API
+# Using command-line
+# Using general API (e.g. SCC API)
+
+And for first two there are two directions that can be used:
+* WinMerge uses Version Control Software functionality. Usually that means checking in/out items.
+* Version Control Software starts WinMerge as external tool.
+
+== Version control operations from WinMerge ==
+With version control systems there are usually two basic operations that external programs can do:
+* checking out file(s) from the system for editing
+* committing (checking in) modified files after changing them
+
+Checking out is in interests of WinMerge. Use case is that user can compare two version controlled folders by selecting them in WinMerge. When user wants to merge some changes in files, one can checkout the file, and do the modifications.
+
+There's been arguments against WinMerge doing this. Usually people argue that it is version control system's responsibility. That is sensible argument. However, using WinMerge folder compare is easier and faster way to merge folders than picking files individually for merging. Also folder compare allows using filters. So there definitely are advantages in this.
+
+'''Note:''' Still, we aren't implementing any version control clients inside WinMerge. WinMerge just uses those version control clients for some specific operations.
+
+== Version Control Software Specific integrations ==
+=== VSS ===
+WinMerge supports VSS versions 4.0 and later allowing user to checkout files from the system.
+* for version 4.0 the support is implemented using command-line.
+* for version 5.0 and later there is COM interface used
+
+VSS 6.0 supports external diff tools via command-line? (Somebody please confirm this?) (see discussion)
+
+=== ClearCase ===
+ClearCase supports external diff/merge tools via commandline. However WinMerge needs to handle some CC specific commandline parameters.
+
+WinMerge can also do checkout/checkin for files in CC workspace using CC via commandline.
+
+=== CVS ===
+There is no (and not planned) support for CVS. Most CVS clients (e.g. WinCVS and TortoiseCVS) should be able to use WinMerge as an external tool. 
+
+== Commandline ==
+Version control software can use all WinMerge commandline switches - indeed many of them are added for external programs to use.
+
+In version 2.6 there are undocumented commandline switches for CC (see CMergeApp::ParseCCaseArgs()).
+
+== SCC API ==
+SCC API is closed API (no public documentation available) some IDE's (e.g. Visual Studio) use. There apparently have couple of reverse-engineered free implementations for SCC API. Status of those are unknown.
+
+'''WARNING:''' Be very sure you are not submitting any code behing NDA for WinMerge. WinMerge is Open Source so it is not legal to do. And what is worse it would prevent anybody reading that code working with SCC (and perhaps also VCS) support.
+
+''This might be a nice feature to add?''
+
+== Conflict Files ==
+WinMerge 2.8 allows opening and resolving conflict files many version control systems produce.
+
+WinMerge parses conflict file to two temporary files which are shown as file compare like one were comparing two casual files. When user edits right-side file and saves it, "resolved" file is saved.
+
+This feature uses WinMerge command line's third path. Resolved file name/path is given as third path.

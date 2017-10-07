@@ -1,0 +1,80 @@
+DIFFRANGE is the single most important structure in WinMerge. Every difference in files is handled as one DIFFRANGE. If you don't know how DIFFRANGEs work, its hard to work with lots of WinMerge code.
+
+Simplest flow for DIFFRANGE handling is:
+# One of [[Compare engines]] returns file differences as list of DIFFRANGEs
+# WinMerge expands returned diffranges by adding synchronization for viewing (adding ghost lines)
+# Whenever difference is navigated to, copied etc, line numbers are found from DIFFRANGE
+
+= Definition =
+DIFFRANGE is defined in <code>Src/DiffList.h</code> as:
+<source lang="cpp">
+struct DIFFRANGE
+{
+	UINT begin0;	/**< First diff line in original file1 */
+	UINT end0;	/**< Last diff line in original file1 */
+	UINT begin1;	/**< First diff line in original file2 */
+	UINT end1;	/**< Last diff line in original file2 */
+	UINT dbegin0;	/**< Synchronised (ghost lines added) first diff line in file1 */
+	UINT dend0;	/**< Synchronised (ghost lines added) last diff line in file1 */
+	UINT dbegin1;	/**< Synchronised (ghost lines added) first diff line in file2 */
+	UINT dend1;	/**< Synchronised (ghost lines added) last diff line in file2 */
+	int blank0;	/**< Number of blank lines in file1 */
+	int blank1;	/**< Number of blank lines in file2 */
+	BYTE op;	/**< Operation done with this diff */
+};
+</source>
+
+There are two groups of variables:
+# First group consists of: begin0, end0, begin1, end1, blank0, blank1 and op. These are set by compare engine.
+# Second group is for WinMerge virtual linenumbers, dbegin0, dbegin1, dend0 and dend1. WinMerge sets these when it synchronizes differences (during loading files, not merging files).
+
+All variables, except op, are linenumbers. Op is the operation DIFFRANGE presents. op is defined as enum in <code>Src/DiffLish.h</code>:
+<source lang="cpp">
+enum
+{
+	OP_NONE = 0,
+	OP_LEFTONLY,
+	OP_DIFF,
+	OP_RIGHTONLY,
+	OP_TRIVIAL
+};
+</source>
+
+= Variables Explained =
+
+What all those variables mean in practice then? Suppose we couple of different lines and one missing line in two files. Also lets assume this is only difference in files, for simplicity:
+ 	File 1				File 2
+ 110:	Identical line 1		Identical line 1
+ 111:	Different Line 1		different line 1
+ 112:	Different Line 2		different line 2
+ 113:	Extra Line 1
+ 114:	Identical Line 2		Identical Line 2
+
+How does this map into DIFFRANGE? DIFFRANGE gets filled in two phases, first one of [[Compare engines]] returns base values:
+* Both differences start in line 111, so begin0 and begin1 will have value 111.
+* File 1 last different line is 113, so end0 gets value 113
+* File 2 last different line is 112, so end1 gets value 112
+* File 1 has no blank lines, so blank0 gets value 0
+* File 2 has one blank line (as opposed to File 1) so blank1 gets value 1
+
+Compare engine does not know about d* variables in DIFFRANGE.
+
+Then WinMerge synchronizes differences so that they can be shown in file compare:
+ 	File 1				File 2
+ 110:	Identical line 1		Identical line 1
+ 111:	Different Line 1		different line 1
+ 112:	Different Line 2		different line 2
+ 113:	Extra Line 1			Ghost Line
+ 114:	Identical Line 2		Identical Line 2
+
+So WinMerge not sets those d* variables:
+* Both differences still start in line 111, so begin0 and begin1 will have value 111.
+* File 1 last different line is still 113, so end0 gets value 113
+* File 2 last different line is now 113, so end1 gets value 113
+* File 1 has no blank lines, so blank0 gets value 0
+* File 2 has one blank line (as opposed to File 1) so blank1 gets value 1
+
+In this example, only dend1 changed since there are no other difference. If there were other previous differences, begin and end linenumbers might have changed because of added ghost lines.
+
+<div class="note">It is very important to understand difference of begin0/dbegin0, end0/dend0 etc. begin0, end0, are line numbers in actual files (in disk) Those are only "real line numbers". d* variables are virtual linenumbers which contain added ghost lines for synchronization purposes. They exist only in WinMerge buffers and in GUI.
+</div>

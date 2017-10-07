@@ -1,0 +1,126 @@
+<div class="note">
+2.9.x versions are development releases, meant for testing new features.
+</div>
+
+
+== Timetable ==
+Some important dates:
+* 2008-03-04: [[Stable_2.8|2.8 stable]] branch was created, allowing 2.9.x development in the ''trunk''
+* 2008-03-27 Added VS2003 project- and solution- files for building executables and shellextension
+* 2008-04-03 Stable 2.8.0 was released, now most efforts are for 2.9.x
+* 2008-07-04 2.10 branch (R2_10) was created for 2.10.x stable development
+* 2008-08-14 2.9.10 beta was released
+
+Future:
+* 2.9.12 Release candidate at (end of) August
+
+''Version numbers are a bit unusual, that is because there was 2.9.9.1 experimental already and seems we have to increase version numbers in releases to have them show up in download sites.''
+
+Release:
+* 2.10 should be ready for release at September.
+
+== General ==
+
+The 2.10 release will be an "improved" 2.8 release, fixing some long-time problems and doing lots of small improvements all over the place. There won't be big new features in 2.10. All big new features and changes will head to next major version.
+
+== Already Done ==
+Already done in 2.9.x:
+* location pane flickering is fixed
+* location pane optimizations
+* PCRE used for editor find/replace regular expressions
+* installer installs WinMerge for all users, not just current user
+* opening conflict files by d&d to main window
+
+== Bugs ==
+As said above, we should try to fix more bugs for this release. Below is a list of bugs that should get some attention now:
+
+* <strike>{{Bug|787588|#787588}} Changing regular expression filter does not refresh display</strike>
+* <strike>{{Bug|1153696|#1153696}} Backspace doesn't work if Shift pressed down</strike>
+* {{Bug|1196904|#1196904}} Copying diff lines seems inefficient
+* {{Bug|1198614|#1198614}} Incorrect path to UTF8/16 file shown in generated patch
+* {{Bug|1482182|#1482182}} Folder compare: EOL style mixed numbers are confusing
+* {{Bug|1534429|#1534429}} Message IDS_SUGGEST_IGNOREEOL incorrect
+* {{Bug|1747260|#1747260}} Location Pane redraw is slow for large files
+* <strike>{{Bug|1749127|#1749127}} Filter Regex pattern not working</strike>
+* {{Bug|1784820|#1784820}} [W2K] File cannot be saved if there is a read only *.bak
+* {{Bug|1792933|#1792933}} Files with ignored changes in folder compare
+* {{Bug|1804049|#1804049}} Unable to close file diff window when readonly file is saved
+* {{Bug|1838886|#1838886}} Hidden files don't save in file comparer
+* {{Bug|1851476|#1851476}} UTF-8 compare under Vista
+* {{Bug|1861581|#1861581}} Windows freeze during compare
+* {{Bug|1924476|#1924476}} Commandline: /dl and /dr don't work for folders
+* {{Bug|1985641|#1985641}} Installation fails due to RegSvr32 error
+* {{Bug|1990085|#1990085}} Slow copying lots of differences
+
+== Todo ==
+List items that will be (possibly) worked on in 2.9.x.
+
+=== Fix and Improve In-Line Differencing ===
+This is very visible feature in WinMerge. Still it has lots of known problems.
+
+Fixing this seems hard (people have been trying but failed).
+
+Some possible ways to proceed:
+* use some other GPL implementation as base (several diff programs have similar feature)
+* use Geek's implementation, which is too buggy, but maybe easier to fix than our current implementation: {{Patch|1784310|#1784310 Geek's version of line differencing}}
+* refactor our current implementation, create good set of unit tests for it
+
+Look at [[InLineDifferencingThoughts|in-line differencing thoughts]] for some more research done on the subject.
+
+=== Rework Filtering System ===
+''Won't be worked anymore in 2.9.x. New development happens in 2.11.x.''
+
+In 2.8.x release there are two separate filtering systems:
+* line filtering for filtering certain lines from files
+* file filtering for filtering files and folders from folder compare
+
+=== Location Pane Rework ===
+Currently location pane implementation is quite dummy in regards keeping info about diffs and repainting itself. Location pane is slow for big files and some users complain that it flickers.
+
+''The flickering problem is mostly solved in 2.9.1.3 using double-buffering''
+
+The reason is Location Pane calculates all diffs and repaints itself fully every time. Instead it should:
+* <strike>calculate diffs and keep list in memory</strike>
+* only add/remove/alter diffs as they altered in file compare
+* repaint only part of bars that is needed (altered diffs)
+
+We also need to be able to lock location pane updates while we do some longer operations. For example when copying all differences, it makes no sense to try to update location pane after every difference copy.
+
+=== Diff Engine (DiffUtils) Update ===
+This has been in our todo-list since 2.0 release.
+
+See TODO-item: {{Todo|1424292|#1424292 Update diffutils engine}}
+
+Kimmov has a version developed by Geek. Geek says he merged all our changes to diffutils. That is a bit hard to verify, but we need to atleast try his implementation. One problem there is Geek also converted to VS2005's ISO versions of several CRT functions. We need to convert back to "old" versions to be able to compile with VS2003.
+
+=== CrossPlatform ===
+See [[CrossPlatform]] page.
+
+=== Remove Plugins Support ===
+See [[Plugins System]] page.
+
+=== Rework View/document Relationships ===
+Currently there is always folder compare document which owns file compare documents opened from it. This doesn't work very well if there are several docs open for same folder etc.
+
+NOTE: We need to keep some relationships when handling files/folders from archive files.
+
+In general, we should break unnecessary relationships, and instead just allow file compare to update status for all folder compares which have that file visible.
+
+=== Use VS2005 for releases ===
+One temptating feature in VS2005 is it can (cross-)compile 64-bit targets. This means 64-bit ShellExtension can be built from the same VS session than 32-bit. Simplifies things quite a bit. No need to setup 64-bit environment and switch between VS sessions just to compile 64-bit target.
+
+=== Show Unique Folder Contents in Recursive Folder Compare ===
+Currently recursive folder compare does not walk into inside of unique folders. Unique folders are just shown as such in the compare results. But we should walk into them and list contents. This way we'll get real flat and recursive compare results. Having a real list of (and routines to get them) items also helps implementing some other features.
+
+Kimmov is working with this.
+
+=== Cache Folder Compare Results ===
+We should cache results from from folder compare. This way we do no need to do a full compare every time we change the folder in non-recursive compare, but can use cached results. This makes browsing folders a lot faster.
+
+=== Others ===
+Some other things we might be doing in 2.9.x:
+* continue compare code architecture work
+* decouple folder- and file-compare windowing
+* compare options to project file?
+* applying patches?
+* convert Visual Studio 2003.Net project- and solution files to VS2005?

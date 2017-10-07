@@ -1,0 +1,185 @@
+= Release Categories =
+
+== Stable Releases ==
+Stable releases are what most people use. They simply must work.
+
+== Beta Releases ==
+Beta releases should be considered good and safe for general use. They must not have any major bugs. Beta releases still have unfinished and unpolished features, documentation is not up-to-date, translations are not up-to-date.
+
+== Experimental Releases ==
+These are snapshots from version control. They are checkpoints for our development. Experimental release may work, or it may not work - they are purely for testing, not for daily use.
+
+There may be experimental releases which are intended to test some new major feature/other change. These releases are '''only for testing'''. The feature/change may or may not appear in future releases, but it can break existing settings, project file etc.
+
+= Current and Future Releases =
+
+== Stable Releases ==
+
+Latest release in earlier stable series is 2.10.4.
+
+Current stable release is 2.12.4.
+
+== Development Releases ==
+Current Development releases are [[Development 2.9.x|2.9.x]].
+
+= Basic Steps for Building a Release =
+There are some significant changes in development versions lately. And building 2.6.x branch and trunk differ now.
+
+== Checks ==
+Before starting releasing, make sure that:
+# Documents are updated (URLs, version numbers)
+# make sure every project and target compiles (compile problems are acceptable for experimental releases, not others).
+## remember to check ShellExtension
+## check manual build works
+## check building installer works
+# make sure version numbers are updated for manual and ShellExtension
+# double-check that there are no uncommitted local changes
+
+== Building a 2.6 Branch Release ==
+
+# make sure every project and target compiles (compile problems are acceptable for experimental releases, not others).
+## remember to check ShellExtension
+## build language files
+## check manual build works (HTML help for every release, HTML also for stable release)
+## check building installer works
+# make sure version numbers are updated for manual and ShellExtension (batch file doesn't update them)
+# double-check that there are no uncommitted local changes
+# add changelog (Src/Changes.txt) message for the release (preferably with revision number) and commit ChangeLog to repository
+# export unmodified repository files to new folder
+# run Src/SetResourceVersions.bat to set version number for WinMerge executable and language files
+# re-compile WinMerge executables (ANSI and Unicode)
+# build language files
+# build user manual
+# re-build the installer
+# copy executables and exported source files to temporary folder
+## keep sources folder structure intact, but remove binaries from Plugins folder
+## put binaries in similar folder structure than they are in installed folder (see previous releases)
+## put folders into archives, top-level folder name should have version number included
+# run a virus check for all files
+# create md5- or SHA1-checksums for files
+# upload installer and archive files
+
+== Building a Trunk or 2.8 branch Release ==
+Trunk releases can be done all phases by hand like with 2.6.x releases or with Python script doing most of the job.
+
+=== Doing release by hand ===
+
+# update <code>English.pot</code> -file from <code>Merge.rc</code> -file using <code>CreateMasterPotFile.vbs</code> -script
+# update language <code>.po</code> files from <code>English.pot</code> using <code>UpdatePoFilesFromPotFile.vbs</code> -script
+# commit changed <code>.pot</code> and <code>.po</code> files
+# make sure every project and target compiles (compile problems are acceptable for experimental releases, not others).
+## remember to check ShellExtension
+## check manual build works
+## check building installer works
+# make sure version numbers are updated for manual and ShellExtension (batch file doesn't update them)
+# double-check that there are no uncommitted local changes
+# add changelog (Docs/Users/ChangeLog.txt) message for the release and commit ChangeLog to repository
+# export unmodified repository files to new folder
+# run Src/SetResourceVersions.bat to set version number for WinMerge executable and resource files
+# re-compile executables and libraries
+## Expat
+## SCEW
+## PCRE
+## WinMerge executables (ANSI and Unicode)
+## ShellExtension (ANSI, Unicode, X64)
+# build user manual
+# re-build the installer
+# copy executables and exported source files to temporary folder
+## keep sources folder structure intact, but remove binaries from Plugins folder
+## put binaries in similar folder structure than they are in installed folder (see previous releases)
+## put folders into archives, top-level folder name should have version number included
+# run a virus check for all files
+# create md5- or SHA1-checksums for files
+# upload installer and archive files
+
+=== Using Python script ===
+The python script <code>Tools/Scripts/create_release.py</code> makes creating a release a lot simpler and faster. Unfortunately it cannot build 64-bit shell extension, so that you must still build yourself.
+
+One important advantage in using the script is it always builds and uses latest files, so there is no possibility to forgot to update or copy some file(s). Also it always creates identical folder structure for distrib folders.
+
+# update <code>English.pot</code> -file from <code>Merge.rc</code> -file using <code>CreateMasterPotFile.vbs</code> -script
+# update language <code>.po</code> files from <code>English.pot</code> using <code>UpdatePoFilesFromPotFile.vbs</code> -script
+# commit changed <code>.pot</code> and <code>.po</code> files
+# add changelog (Docs/Users/ChangeLog.txt) message for the release and commit ChangeLog to repository
+# open command prompt and go to WinMerge source's root folder (so that <code>Filters</code> and <code>Src</code> are subfolders.
+# Build 64-bit ShellExtension
+# run the <code>Tools/Scripts/create_release.py</code> -script. The script takes version number as an argument. For example: <code>python Tools\Scripts\create_release.py -v 2.7.8</code>
+# wait until the script finishes...
+# when the script finishes, you'll have:
+## built executables
+## built manual
+## exported sources
+## created binary distrib folder
+# re-build the installer
+# put source and binary distribution folders into archive files
+# run a virus check for all files
+# create md5- or SHA1-checksums for files
+# upload installer and archive files
+
+== Using buildall.bat ==
+Instead of manually opening and then building every project file there is ''buildall.bat'' in root folder of WinMerge. That batch file requires it is run from Visual Studio Command Prompt or that ''vcvars32.bat'' is run first in Command Prompt.
+
+== Checksums ==
+Creating and publishing MD5- or SHA1-checksums for released files is a good safety measure:
+* user can verify downloaded files are ones we have uploaded
+* user can verify there are no download errors in files
+* user can verify files downloaded from 3rd party download site are original files
+
+MD5- or SHA1-checksums can be calculated with several tools, Kimmov is developing [http://checksumtool.sourceforge.net/ CheckSum Tool] which already (being still in alpha) does the job. Another nice tool is [http://www.slavasoft.com/fsum/ fsum].
+
+Create checksums for all released files, and append checksums to release notes, like this:
+
+ f5b56e88f7a3402d5950ead1f30e765df30d8114 Runtimes-2.6.14.7z
+ 343cc35288a79f2c54a44c8ab56192ecf4286f52 Runtimes-2.6.14.zip
+ 96e947eda03a4374f20077acb3deee4e6a940c58 WinMerge-2.6.14-exe.7z
+ cc51863c1b3c95a214b4fbbe6524fe4612206a73 WinMerge-2.6.14-exe.zip
+ 90052b89c1d041cd57e5ba3867b4d8b6c0bcaab4 WinMerge-2.6.14-Setup.exe
+ 39846da71b4f47dccf9fc987ed6a035ca8e9266b WinMerge-2.6.14-src.7z
+ f74200858bb912dadc4ebf2200d7414ff1ce15f3 WinMerge-2.6.14-src.zip
+
+== Release notices and announcements ==
+There are several notice/announcement systems we are using:
+* SourceForge.net file release system's e-mail notices
+* Announcement -mailing list
+* SourceForge.net Project news
+* Web pages
+* PAD file
+
+Usually for experimental- and beta-releases we'll only sent release system notices. Announcement mail or news-item could be posted if there is something significant in beta release (never for experimental release).
+
+For stable releases we want to send these notices and announcements in certain order:
+# Upload the release. DO NOT send release system notice. We'll want to wait for couple of days to see first people spotting the release and installing it don't find any major problems.
+# Send release system notice. Now thousands of people notice our release. Bug reports start coming in. Now we'll wait for few days if there is something major problems reported.
+# Update web-page and PAD file, send announcement mail, add news-item. Its something like week after the release upload. Thousands of people have downloaded the release, so we have certain trust it is a good release.
+
+Note: Of course the best would be to have release freezes, have long-enough "just testing" phases etc. But the reality is we don't have time or resources to test everything (just something). So we have to trust people report their problems back to us.
+
+= Improvements to Building? =
+Above list says it all. It is a tedious task to build a release. How to make it easier and more automatic?
+
+One big step would be using makefiles/scripts to build all targets in one go. 64-bit Shell Extension still needs its own environment but even building all other targets would be very nice.
+
+However:
+* I don't want to use nmake or other traditional makefiles. They are a real pain to keep up to date when we mostly change project files. It just leads us having broken makefiles when we need a release.
+
+Is there something like [http://nant.sourceforge.net/ nAnt] we could use?
+
+== Using Visual Studio from Command Line ==
+
+There is <tt>buildall.bat</tt> batch file in WinMerge sources root folder. The batch file can be run from Visual Studio command prompt (found from Visual Studio Tools in Start-menu) or by running <tt>vcvars32.bat</tt> first in command prompt.
+
+Te batch file builds:
+* PCRE
+* Expat
+* SCEW
+* WinMerge executables
+* Language files
+
+''Note'': If you are using Visual Studio 2003.Net or Visual Studio 2005 you must first convert all projects into new format.
+
+See also this link: [http://www.devsource.com/article2/0,1895,1931444,00.asp Working at the Visual Studio Command Line].
+
+=== TODO ===
+These should be added to the batch file:
+* Compiling Shell Extension
+* Building documentation

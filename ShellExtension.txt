@@ -1,0 +1,54 @@
+Shell Integration is a Windows shell extension adding WinMerge items to Explorer's context menu.
+
+See following link for a good tutorial for shell extensions by Michael Dunn:
+* [http://www.codeproject.com/shell/ CodeProject's Shell pages]
+
+== How ShellExtension works ==
+
+To put it shortly, ShellExtension gives selected items as commandline parameters to WinMerge executable.
+
+ShellExtension has two modes:
+# Basic mode (default after install)
+# Advanced mode
+
+Basic mode adds always only one item to the context menu. Selecting that item starts WinMerge executable with 1-2 selected items.
+
+Advanced mode adds two varying items to the context menu. Advanced mode has a "memory", one can select item from one folder, select ''Compare to...'' to memorize it and then select another item from another folder. This brings lots of more flexibility but GUI is also a bit harder to understand.
+
+In advanced mode, registry key is used to store memorized item. So it is memorized until it is cleared or overwritten.
+
+=== Registry keys ===
+ShellExtension uses registry key: <code>HKCU/Software/Thingamahoochie/WinMerge</code>
+
+Several values:
+* <code>ContextMenuEnabled</code> : bitmap telling if context menu is enabled, in which mode and if subfolders are included by default
+* <code>FirstSelection</code> : stores memorized item
+* <code>Executable</code> : Full path to WinMerge executable to start
+* <code>PriExecutable</code> : ''(for developmement/developers)'' Path to WinMerge executable overwriting above value. As WinMerge sets executable for shell extension every time options dialog is closed with OK-button, shell extension easily gets associated with debug builds. Not nice when you really need WinMerge to do some work. This setting allows to force Shell Extension always use certain (release) build instead of random development builds.
+* <code>LanguageId</code> : ID of translation used
+
+=== Basic codeflow in ShellExtension ===
+ShellExtension folder has many generated or rarely changed files. Main code is in WinMergeShell.cpp.
+
+# When Windows opens context menu, CWinMergeShell::QueryContextMenu() is called
+## CWinMergeShell::QueryContextMenu() checks if there are valid number of items selected, and if there are previous items selected
+## Based on those CWinMergeShell::QueryContextMenu() adds correct menuitems
+# When selection is moved over WinMerge item CWinMergeShell::GetCommandString() is called
+## CWinMergeShell::GetCommandString() returns the string Windows shows in statusbar (usually a help text)
+# When any of WinMerge context menu items is selected CWinMergeShell::Initialize() is called
+## CWinMergeShell::Initialize() stores one or two selected paths
+# After that, CWinMergeShell::InvokeCommand() is called
+## CWinMergeShell::InvokeCommand() starts WinMerge using commandline parameters
+
+In addition to mentioned functions there are several helper functions in WinMergeShell.cpp.
+
+== How ShellExtension Integrates to Explorer ==
+Integrating to explorer (or 'shell') simply means adding WinMerge CLSID as handler for various shell classes. This is done via registry.
+
+ShellExtension adds itself to following keys under <code>HKEY_CLASSES_ROOT</code>:
+* <code>*/ShellEx/ContextMenuHandlers</code> - adds as a handler for all files
+* <code>Directory/ShellEx/ContextMenuHandlers</code> - adds as a handler for folders
+* <code>Directory/Background/ShellEx/ContextMenuHandlers</code> - adds as a handler for selected folder's background (in explorer)
+* <code>Drive/ShellEx/ContextMenuHandlers</code> - adds as a handler for drive letters (root folders)
+
+These registry additions are defined in file <code>ShellExtension/WinMergeShell.rgs</code>.

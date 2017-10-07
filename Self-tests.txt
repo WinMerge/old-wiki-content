@@ -1,0 +1,11 @@
+WinMerge has a set of self-tests in the Testing directory. 
+
+These consist of a perl driver program, which actually works against both WinMerge and against gnu diffutils diff.exe (a wrapper program diff2merge is used in order to use diff.exe style arguments, so that WinMerge can be a drop-in test subject replacement for diff.exe).
+
+The test files are in subdirectories, and include Windows, Unix, and Mac versions, in order to test line termination handling.
+
+WinMerge used to pass all of these self-tests, but current WinMerge no longer passes them all; see outstanding bug on the sourceforge bug list for more information.
+
+diffutils diff.exe never passed all the self-tests, because it lacks support for Mac line terminations.
+
+Note: The current self-tests only test the diffutils engine, because there is no commandline support in WinMerge for requesting the QuickCompare engine.

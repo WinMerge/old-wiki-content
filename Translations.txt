@@ -1,0 +1,276 @@
+Our goal is to have stable releases fully localized. But as development is pretty fast, there is no way to keep translations up-to-date in beta- or experimental releases.
+
+<div class="note">Stable bugfix-releases do not have translation changes after first stable (x.x.0) release (for example 2.6.x releases do not have changes after 2.6.0).</div>
+
+The table below shows the releases where a particular language was updated.
+
+== Maintained or unmaintained? ==
+<div class="warning">This list is '''unmaintained'''! For current informations look at the [[Translations#Translations_Status|Translations Status]].</div>
+Translations are divided to four categories:
+*<span id="actively" class="actively">'''Actively maintained'''</span> - translator(s) send frequent updates
+*<span id="maintained" class="maintained">'''Maintained'''</span> - translator(s) (we hope) send updates when we ask
+*<span id="unmaintained" class="unmaintained">'''Unmaintained'''</span> - we haven't heard anything from translator(s)
+*<span id="unknown" class="unknown">'''Unknown'''</span> - we got update to latest stable but don't know if translator is still interested
+
+{| class="wikitable" border="1"
+! Language
+! Status
+! Author
+! colspan="6" | Versions
+|- class="maintained"
+| Bulgarian
+| [[#maintained|Maintained]]
+| [mailto:sld%20at%20mail%20dot%20bg sld] (2.1)<br />[mailto:tigertron%20at%20dir.bg tigertron] (2.7 - 2.5)
+| ''2.7''
+| 2.6
+| 
+| ''2.1''
+| 
+| 
+|- class="actively"
+| Catalan
+| [[#actively|Actively maintained]]
+| [mailto:jvilar%20at%20users%20dot%20sourceforge%20dot%20net Jordi Vilar]
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 
+|- class="maintained"
+| Chinese (Simplified)
+| [[#maintained|Maintained]]
+| [mailto:liaobin%20at%20jite%20dot%20net Liaobin] (2.0)<br />[mailto:xmpdhml%20at%20users%20dot%20sourceforge%20dot%20net xmpdhml] (2.7 - 2.4)
+| ''2.7''
+| 2.6
+| 2.4
+| 
+| 2.0
+| 
+|- class="maintained"
+| Chinese (Traditional)
+| [[#maintained|Maintained]]
+| [mailto:kokokoko%20at%20giga%20dot%20net%20dot%20tw Koko] (2.0 - 2.2)<br />[mailto:wck3%20at%20users%20dot%20sourceforge%20dot%20net wck3] (2.7 - 2.6)
+| ''2.7''
+| 2.6
+| 
+| 2.2
+| 2.0
+| 
+|- class="actively"
+| Croatian
+| [[#maintained|Maintained]]
+| [mailto:hasan.osmanagic%20at%20public.carnet.hr Hasan Osmanagæ]
+| ''2.7''
+| 
+| 
+| 
+| 
+| 
+|- class="actively"
+| Czech
+| [[#actively|Actively maintained]]
+| [mailto:jt%20at%20taxoft%20dot%20cz Jiri Tax] (1.7)<br />[mailto:janhryz%20at%20users.sourceforge.net Jan Hryz] (2.7 - 2.4)
+| ''2.7''
+| 2.6
+| 2.4
+| 
+| 
+| 1.7
+|- class="unmaintained"
+| Danish
+| [[#unmaintained|Unmaintained]]
+| [mailto:list1974%20at%20hotmail%20dot%20com Christian List]
+| 
+| 
+| 
+| 2.2
+| 2.0
+| 
+|- class="unmaintained"
+| Dutch
+| [[#unmaintained|Unmaintained]]
+| [mailto:ronald%20at%20schaap%20dot%20demon%20dot%20nl Ronald Schaap] (1.7)<br />Michel Coene (2.3 & 2.2)
+| 
+| 
+| 
+| 2.2
+| 
+| 1.7
+|- class="maintained"
+| French
+| [[#maintained|Maintained]]
+| [mailto:gil_andre%20at%20compuserve%20dot%20com Gil Andre] (1.7)<br />[mailto:ccganier%20at%20club-internet%20dot%20fr Laurent Ganier] (2.1 & 2.0)<br />[mailto:jean-f-j%20at%20users.sourceforge%20dot%20net Jean FJ] (2.7 - 2.2)
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 1.7
+|- class="actively"
+| German
+| [[#actively|Actively maintained]]
+| [mailto:winfried%20dot%20peter%20at%20omicron%20dot%20at Winfried Peter] (1.7)<br />[mailto:tonda%20at%20users%20dot%20sourceforge%20dot%20net Joerg Schneider] (2.0)<br />[mailto:tim%20at%20gerundt%20dot%20de Tim Gerundt] (2.7 - 2.1)
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 1.7
+|- class="unmaintained"
+| Hungarian
+| [[#unmaintained|Unmaintained]]
+| [mailto:documan%20at%20users.sourceforge%20dot%20net Márton Balázs]
+| 
+| 
+| 2.4
+| 2.2
+| 
+| 
+|- class="actively"
+| Italian
+| [[#actively|Actively maintained]]
+| [mailto:michele%20dot%20merega%20at%20ifminfomaster%20dot%20com Michele Merega]<br />[mailto:klenje%20at%20users%20dot%20sourceforge%20dot%20net Andrea Decorte (Klenje)] (2.7 - 2.1)
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 1.7
+|- class="actively"
+| Japanese
+| [[#actively|Actively maintained]]
+| [mailto:sawanaka%20at%20d1%20dot%20dion%20dot%20ne%20dot%20jp Takashi Sawanaka]
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 
+| 
+|- class="maintained"
+| Korean
+| [[#maintained|Maintained]]
+| [mailto:bbcool%20at%20gmail%20dot%20com Hwang Sukjoon] (2.6 - 2.4)<br />[mailto:pyrasis%20at%20users%20dot%20sourceforge%20dot%20net Lee Jae-Hong] (2.2 - 2.0)
+| 
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 
+|- class="unmaintained"
+| Norwegian
+| [[#unmaintained|Unmaintained]]
+| [mailto:hansfn%20at%20users%20dot%20sourceforge%20dot%20net Hans Fredrik Nordhaug]
+| 
+| 
+| 
+| 2.2
+| 2.0
+| 
+|- class="maintained"
+| Polish
+| [[#maintained|Maintained]]
+| [mailto:traduc%20at%20kki%20dot%20pl Pawel Wawrzysko]
+| ''2.7''
+| 2.6
+| 
+| 2.2
+| 2.0
+| 
+|- class="unknown"
+| Portugese
+| [[#unknown|Unknown]]
+| Nelson Simão
+| ''2.7''
+| 
+| 
+| 
+| 
+| 
+|- class="unmaintained"
+| Portugese (Brazilian)
+| [[#unmaintained|Unmaintained]]
+| [mailto:wender%20at%20pta%20dot%20com%20dot%20br Wender Firmino]
+| 
+| 
+| 
+| 
+| 2.0
+| 
+|- class="actively"
+| Russian
+| [[#actively|Actively maintained]]
+| [mailto:wwarlock%20at%20mail%20dot%20ru Dmitriy S. Aleshkowskiy]
+| ''2.7''
+| 2.6
+| 
+| 2.2
+| 
+| 
+|- class="maintained"
+| Slovak
+| [[#maintained|Maintained]]
+| [mailto:vancojur%20at%20decef%20dot%20elf%20dot%20stuba%20dot%20sk majvan] (2.0)<br />[mailto:helix84%20at%20users%20dot%20sourceforge%20dot%20net Ivan Masár] (2.7 - 2.6)
+| ''2.7''
+| 2.6
+| 
+| 
+| 2.0
+| 
+|- class="actively"
+| Spanish
+| [[#actively|Actively maintained]]
+| [mailto:grimmdp%20at%20yahoo%20dot%20com Dean Grimm] (1.7)<br />[mailto:mack_%20at%20users%20dot%20sourceforge%20dot%20net Jesús M. Delgado 'MacK'] (2.6 - 2.2)
+| 
+| 2.6
+| 2.4
+| 2.2
+| 
+| 1.7
+|- class="actively"
+| Swedish
+| [[#actively|Actively maintained]]
+| [mailto:goran%20dot%20x%20dot%20hakansson%20at%20telia%20dot%20com Göran Håkansson] (2.0)<br />[mailto:hans%20dot%20ericson%20at%20bredband%20dot%20net Hans Eriksson] (2.7 - 2.1)
+| ''2.7''
+| 2.6
+| 2.4
+| 2.2
+| 2.0
+| 
+|- class="unmaintained"
+| Turkish
+| [[#unmaintained|Unmaintained]]
+| [mailto:turquaz37915%20at%20users%20dot%20sourceforge%20dot%20net Ozkan UNVER]
+| 
+| 
+| 
+| 2.2
+| 
+| 
+|}
+
+*'''2.2.2''': Please use version 2.2.2 language files since there are bugfixes in them.
+*'''1.7''': Release 1.4 language versions also works with release 1.7.
+
+== Translations Status ==
+*[http://winmerge.org/translations/status_branch.php Stable Version (Branch)]
+*[http://www.winmerge.org/translations/status_trunk.php Developer Version (Trunk)]
+
+== Installing a translation ==
+
+To change a language, select the desired language from the View->Languages menu choice; language names are shown in both languages (native language and currently selected language).
+
+WinMerge 2.8 stable release and later releases uses Gettext PO files for translations. Every translation has its own ''<code>language name</code>'' + <code>.po</code> file in ''<code>Languages</code>'' subfolder. These would normally be installed for you by installer, if you did a ''Full Installation''. Installer also allows to select individual translations to install. If you did not install translation(s) with installer you can copy the desired language file into the correct folder, and restart WinMerge.
+
+WinMerge executable archive files (WinMerge-x.x.x-exe.zip and .7z) contain all available language files.
+
+== Updating a translation or submitting a new translation ==
+
+If you would like to update any of these translations or add another translation, then please follow [http://winmerge.org/translations/instructions.php these instructions] (found also from <code>[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/Translations.html Docs/Developers/Translations.html]</code> in WinMerge source tree). You can find a more technical view about the [[Translation System]] in this Wiki.
+
+== Translators Mailing List ==
+We have a mailing list in SourceForge.net for translators. If you are interested in translating WinMerge, please join the list.
+
+* '''[http://lists.sourceforge.net/mailman/listinfo/winmerge-user Subscribe/Unsubscribe translate mailing list]'''
+* [http://sourceforge.net/mailarchive/forum.php?forum_name=winmerge-translate Translate mailing list archive]
+* [http://winmerge.org/support/mailing-lists.php All WinMerge mailing lists]

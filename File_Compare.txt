@@ -1,0 +1,52 @@
+File compare main objective is to show differences in two files and allow user to copy those differences between the files.
+
+Basic flow of file compare is:
+# Files to compare are given into one of [[Compare engines]].
+# Compare engine processes files and returns a list of differences, ''[[#Diff|diffs]]''.
+# Files are loaded into file compare (different buffers from compare engine).
+# Lines in files are processed based on diffs
+## Lines are marked as different
+## Diffs are synchronized for viewing by adding ''ghost lines'' at the side where difference is shorter
+
+Because diffs are matched to line numbers, there are two kinds of linenumbers:
+# Real line numbers - these line numbers match to line number file has in storage, with added ghost lines
+# Apparent line numbers - these line numbers are what are shown in view, without added [[#Ghost Lines|ghost lines]]
+
+= Line Based Compare =
+WinMerge file compare always works with lines. There is no character-level compare in compare engine level. Character/word-level difference highlight is added by GUI when showing files (see [[String Differencing]]).
+
+This means the smallest unit file compare handles is line. When merging differences, WinMerge always copies whole lines.
+
+For example:
+
+ File 1		File 2		WinMerge sees
+ aaaa		aaaa		identical line
+ bbbb		bbaa		different line - diff starts
+ cccc		ccaa		different line
+ dddd		ddaa		different line
+ eeee				missing line from file 2
+ ffff				missing line from file 2
+ gggg		gggg		identical line - diff ends in previous line
+
+
+= Diff =
+Diff (difference) is a block of lines determined as different (''Better description needed?''). In file compare WinMerge handles diffs, copies them from file to another.
+
+In the code, diff is defined as a [[DiffRange]].
+
+= Copying Diff =
+Copying diff from file to another means copying lines inside difference from file to another. If difference lengths are different, then new lines are added or existing lines removed.
+
+= Ghost Lines =
+Ghost lines are used to synchronize different-length diffs. Ghost lines are added to end of shorter diff so that its length matches longer diff. For example, if first file has 5-line diff and second file has 3-line diff, second file needs two ghost lines:
+
+ File 1		File 2
+ aaaa		aaaa
+ bbbb		bbaa
+ cccc		ccaa
+ dddd		ddaa
+ eeee
+ ffff
+ gggg		gggg
+
+Above table has first and last lined identical. Then three different lines, and two missing lines from File 2. Empty lines in File2 are ghost lines in WinMerge (shown as gray lines by default).

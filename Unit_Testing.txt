@@ -1,0 +1,68 @@
+Unit testing is a good way to run automatic testing for non-GUI code. Unit tests are a great help when developing new code (one can write tests while developing and verify code against those tests) and when modifying existing code (one can verify existing functionality does not get broken).
+
+There is some initial learning curve for using and writing unit tests, but after a while they become the second nature. :) Unit testing of compare code would be extremely important for us now.
+
+== The Policy ==
+Whenever there are unit tests available, we expect people to run those tests for modified code before submitting the code or committing it. If there are failures in testing, that should be mentioned, so at least we can keep track of them if we cannot fix them.
+
+== The Tools ==
+There are two widely used unit-testing tools for C and C++ code:
+* [[CUnit]] is for testing C-code, it is easier to use and write the cases
+** will be used for C-code, like diffutils
+* [[CppUnit]] is for testing C++ code, but it is a lot more complex than CUnit
+** will be used for most C++ code
+
+== The Coverage ==
+It is very hard and time consuming to write tests that test everything. So focus is (in this order):
+# basic features
+# simple /common error cases
+# advanced features
+# rare error cases
+
+There is no point in first writing tests for some rare error situations. Basic features must work and for they we mostly need the tests.
+
+== Running the Tests ==
+Unit tests can be run as a post-build step or as (or with) separate executable.
+
+At starters we start creating stand-alone projects for running unit tests. Later we may consider running them as post-build step or through separate GUI.
+
+== Submitting New Tests ==
+Always appreciated. Some things to consider:
+* try to avoid duplicating (lots of) tests (although duplicating makes sense when same test applies in different situations etc)
+* keep tests sensible, don't test impossible things or obvious things. E.g. not much sense testing constants.
+* document tests
+** purpose (what it tests)
+** expected result
+* group tests
+** same areas testing in same file/folder
+** this helps finding and managing them (e.g. when you need to run tests for some particular area/feature)
+
+== Testing Areas ==
+More tests we wrote the better!
+
+Couple of areas are in special interest for unit testing:
+* compare engines
+* string diff
+* filtering
+
+== Test coverage ==
+
+=== Good coverage ===
+* ''none''
+
+=== Some Tests Exist ===
+* project files (''CppUnit/ProjectFile'')
+* string differencing (''CppUnit/StringDifferencing'')
+
+=== No Tests ===
+Plenty of tests to write...
+* diffutils
+* byte compare
+* filtering
+** regexp matching
+** adding/removing/editing filters
+** reading/writing filters to/from file
+* options system
+* general file handling
+** reading info/stats
+** updating info

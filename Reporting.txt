@@ -1,0 +1,56 @@
+http://wiki.winmerge.org/wiki/There are two different types for reporting in WinMerge:
+* reports from folder compare, listing items statuses etc
+* reports from file compare, listing differences in single files
+
+== Currently ==
+We have currently some basic reporting functions for the folder comparison. Currently we output all visible data to the report from folder compare. This means we use same columns, their ordering and item filters. Basically user can remove single items by hiding them from folder compare.
+
+Formats supported:
+*Comma-separated list - simple ASCII text file where columns are separated by comma
+*Tab-separated list - simple ASCII text file where columns are separated by tab-character
+*Simple HTML - simplistic table-based HTML report
+*Simple XML - simple XML file where columns have different element names
+
+It seems that reports are important for many users, so we should improve this functions a little bit!
+
+== Open Questions ==
+We need to define what kind of reports there should be and what options/customization we offer for users.
+
+Some things to consider:
+* What report types to support (in addition to current ones)?
+* How we allow better customization of reports? Most likely users want/need to format reports to their needs.
+
+== Ideas ==
+Here are some ideas how we could improve the reporting functions:
+
+=== General ===
+* Add also some reporting functions for file comparison, since not everybody can read patch files.
+** '''kimmov''': true, this has been requested several times. However open questions include:
+*** for HTML (?) we could use colors for differences, but what about text or XML?
+*** different codepages, unicode/ansi file compares, different EOL styles...
+*** and customization.. Most likely what we can offer by default isn't what many users need...
+* Use templates. Reports are something everybody likes to personalize and we should allow it. Some ways to improve on this:
+** One CSS template file users can edit and which we then embed to the HTML report file.
+** Allow user to have different CSS files to choose from in GUI. The selected CSS is embedded to the report file.
+* Have more or less configurable report layout. Templates might once again be the solution, but it becomes tricky to implement and GUI might end up too hard to use.
+* Grouping: ('''TODO''': add link to RFE) allow to group items at least by compare status, maybe by other columns aswell
+
+=== Simple HTML ===
+The current HTML report looks very ''old school'' with the unformatted HTML table.
+*The easiest way are some simple CSS rules to the <head> from the report file, which change the font and the table borders. {{Patch|1646210|Patch 1646210}}
+*For more complex CSS rules we could add the column name as class to each <td> element. So we could for example change the alignment from the date columns.
+*Add a CSS class to every second <tr> element, so we could a ''zebra'' look.
+: '''Kimmo''': I'd rather see this as just one option (allow ''zebra'' look), in practice users may want to emphasize different columns (like date or compare status) and that should be possible. 
+*Add ''Compare Statistics'' to output.
+** '''Kimmo''': this should be optional, otherwise sounds good.
+
+=== Simple XML ===
+*Add ''Compare Statistics'' to output.
+
+=== GUI ===
+The current report dialog looks a little bit neglected:
+*It always selects ''comma-separated list'' as report type, even when the last (and selected) file path is e.g. ''*.html''. Maybe we could use ''tabs'' for each report type and the path list box shows only the paths which belongs to the current report type.
+*With ''tabs'' we could also add easier options that only belong to one report type. For example: ''Include CSS rules'' for HTML reports.
+* Still, we should try to keep the GUI easy to use... Too many choices and options just confuse users.
+'''Tim''': I would like a GUI like in this [[Media:New_report_dialog_prototype.png|prototype image]].
+:'''Kimmo''': Well, I like the idea, but implementing that kind of GUI in MFC is pretty hard, as tab control must be updated by programmer (unlike in VB). Only way I'm implementing tabs is with property-dialogs where tabs are sized by the dialog.index.php?title=Reporting&action=edit

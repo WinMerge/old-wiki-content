@@ -1,0 +1,78 @@
+As stated in [[Development_2.9.x|Development 2.9.x]], the in-line differencing is a very visible feature in WinMerge but it has lots of known problems. Below is the list of thoughts collected while looking at fixing/refactoring this feature. See also [[String Differencing]] for general description of the feature.
+
+== Possible implementation starting points ==
+
+* current implementation
+* Geek's implementation, which is too buggy, but maybe easier to fix than our current implementation: {{Patch|1784310|#1784310}} Geek's version of line differencing
+* some other GPL implementation as base (several diff programs have similar feature)
+
+== Expectations of in-line differencing ==
+
+# Should be able to work in case sensitive or insensitive way, depending on user's settings
+# Should be able to group differences in any of the following three ways (depending on user's settings)
+## Character level differencing (the easiest one, no grouping)
+## Word-level differencing (break at whitespace) 
+## Word-level differencing (break at whitespace or punctuation) 
+## As with the three musketeers, there may be a fourth one we could add which would be a generalization of the previous 2: Word-level differencing where user specifies where to break through regular expressions or something similar
+# Should be able to honor the whitespace user setting (see manual for meaning)
+## Compare
+## Ignore change
+## Ignore all
+# (need to verify this) Detect end-of-line differences?
+
+== Related bugs ==
+
+Here is a list of bugs that are (or may be) related to in-line differencing and could be used as a source of data for unit or regression tests. Some may be there erroneously, I looked at a lot of bugs in the tracker the day I scanned the list.
+
+* {{Bug|465783|#465783}}
+* {{Bug|510352|#510352}}
+* {{Bug|830911|#830911}}
+* {{Bug|964068|#964068}}
+* {{Bug|1177592|#1177592}}
+* {{Bug|1262229|#1262229}}
+* {{Bug|1444655|#1444655}}
+* {{Bug|1639453|#1639453}}
+* {{Bug|1658984|#1658984}}
+* {{Bug|1683061|#1683061}}
+* {{Bug|1714088|#1714088}}
+* {{Bug|1883409|#1883409}}
+* {{Bug|1890614|#1890614}}
+* {{Bug|1910870|#1910870}}
+* {{Bug|1939279|#1939279}}
+* {{Bug|1949397|#1949397}}
+* {{Bug|1989811|#1989811}}
+* {{Bug|1996269|#1996269}}
+
+that is up to 2008-07-08 for the "DIFF Engine" category.
+
+== Diff algorithm theory ==
+
+Looking for the smallest differences between 2 strings is the equivalent of finding the "Longest Common Subsequence" (LCS for short) of these 2 strings and declaring the rest of the 2 strings as different. There has been a lot of research done on the subject. Here is some links to good documentation I found:
+* [http://www.ics.uci.edu/~eppstein/161/960229.html LCS algorithms explained from simple recursive in O(mn) space and time to Hirschberg's algorithm linear space and O(mn) time]
+* [http://en.wikipedia.org/wiki/Longest_common_subsequence_problem Some more with links]
+
+<div class="note">In our actual code the sd_ComputeWordDiffs() method is called from CMergeDoc::GetMatchCost() to get the Levenshtein distance. Since we don't need the list of differences but just there cost, we probably don't have the optimal solution there.</div>
+
+== New implementation plan ==
+
+<div class="note">There is a GPL-like [http://freespace.virgin.net/cdm.henderson/site/cpp/lcs/index.htm implementation of both the Levenshtein distance and the LCS] that Chris Henderson proposed to Boost.</div>
+
+The new in-line diff algorithm should try as much as possible to separate the functionalities into different "policies". The diff-algorithm should not be doing itself the whitespace checks, the case-sensitivity check, the word-breaking and DBCS lead byte verification; it should only perform diff algorithm.
+
+So the overall algorithm should be something like:
+
+* FindDifferences(leftstring, rightstring)
+** Foreach string
+*** Build ''word'' array (''word'' meaning depends on line-difference coloring option)
+*** ''Remove'' spaces (depends on whitespace option)
+** Select comparison function to pass to diff algorithm (depends on case-sensitivity option and on the definition of ''word'' above)
+** Perform diff using the comparison function and the new structure/iterators representing the original strings in there modified state
+** Convert the returned diff into the right character pointers to be consumed by the caller
+
+or
+
+* FindDifferences(leftstring, rightstring)
+** Select comparison function to pass to diff algorithm (depends on case-sensitivity option)
+** Perform diff at character-level without taking whitespace or grouping into account but using the case-(in)sensitivity comparison function
+** Modify the returned diff structure to remove unwanted whitespace differences (depends on whitespace option)
+** Modify the returned diff structure to move the character pointers at the begin/end of groups (depends on line-difference coloring option)

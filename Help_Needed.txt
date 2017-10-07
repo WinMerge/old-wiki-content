@@ -1,0 +1,120 @@
+We are always looking for help with WinMerge. All developers develop WinMerge in their spare time, there is no single paid developer. So our development resources are very limited at the moment.
+
+=== Why Contribute to WinMerge? ===
+
+There are lots of good Open Source projects available, so selecting a project to contribute to is not easy. Some good reasons to contribute to WinMerge:
+* ''WinMerge is popular''
+* ''WinMerge is important'' - lots of users ''depend'' on WinMerge in their work. WinMerge is not just one nice tool, it is an essential part of people's tool chains
+* ''WinMerge is not easy or trivial'' - if you're looking for a challenge, look no further!
+* ''WinMerge is mature'' - lots of design, debugging and testing ensures a stable base for new development
+* ''WinMerge looks to innovate and improve'' - we are always searching for new ways to make compare/merge easier and faster for users
+* ''WinMerge is flexible'' - we constantly hear about new ways to use WinMerge, and do our best to enable new ways to use it
+* ''WinMerge is used to develop WinMerge'' - often called as [http://en.wikipedia.org/wiki/Eat_one's_own_dog_food dogfooding]
+
+=== Open Source ===
+
+WinMerge is [http://en.wikipedia.org/wiki/Open-source_software Open Source Software]. This means everybody can download WinMerge source code (including documentation, web pages etc) and improve and modify them. The only thing we ask is that people submit their improvements and modifications back to us so that all WinMerge users may benefit.
+
+=== Current Developers ===
+
+There is a small group of [[Developers|active developers]], but fortunately WinMerge has grown over years and requires more and more work to be done. So we are constantly hoping new people will step up and start working with us to improve WinMerge.
+
+=== How Can I Help? ===
+
+We like help in coding! But while coding is important, we also need other kind of help:
+*testing (writing more [[Unit Testing|unit tests]] would be great!)
+*writing documentation (user- and developer-) 
+*[[Translations|translating WinMerge]]
+*improving the installer (installer development is pretty much stalled other than adding/removing files)
+*triaging items in our bug- and RFE- trackers
+
+==== Testing ====
+Just get the latest WinMerge (experimental/beta/stable) release, try things and submit a bug report if something is broken. Providing a files to test, simple folder structure copies or other means we can reproduce the bug is a big bonus.
+
+==== Writing Documentation ====
+Our manual is pretty good. But there is always something we forgot to document. Or there might be errors since we forgot to update something from earlier version of WinMerge. Improving documentation helps a lot of users!
+
+Our user manual is in Docbook/XML format, it should be easy to edit with any text editor. Most of the developer documentation is HTML files.
+
+==== Triaging Bug- and RFE- Tracker Items ====
+'''Here we really need help!''' We have almost 150 open bugs. Unfortunately most of the time developers do not have enough time to look at every bug. We need help in:
+# determining if it is a bug at all - maybe it is a misunderstanding how WinMerge works?
+# determining if bug is still present in latest version
+# telling us how it can be (easily) reproduced, in simple steps. This info is many times missing from bug reports
+# creating a ''test case'' for the bug. Submitting file(s) or folders structure which can be used to reproduce the bug. This is another important information many times missing from the reports.
+# verifying the fix after the bug is fixed (maybe also trying that something related did not get broken)
+
+==== Coding ====
+WinMerge is mostly C/C++ code and is compiled with Visual Studio (VC6 and later work). WinMerge currently uses MFC heavily, but we'd like to remove MFC dependency from backend code. However, C/C++ wizardry or deep knowledge of MFC is not required to work with WinMerge. There is a lot of low level code for file handling, Unicode etc...
+
+=== Things to do? ===
+
+Our tracker items are a good starting point for looking for things to do: [http://sourceforge.net/tracker/?group_id=13216&atid=113216 Bugs], [http://sourceforge.net/tracker/?group_id=13216&atid=363216 Feature Requests] and [http://sourceforge.net/tracker/?group_id=13216&atid=759426 Todo] lists. If you see something in there that you think you can handle, let us know ([[#How to contact us?|How to contact us?]]) or leave a comment in the item.
+
+We prefer you to start with existing tracker items, but most of those may be too demanding as first items and without good knowledge of WinMerge code. So we have collected a short list of items that look like a good first items: [[#List of tracker items|List of tracker items]].
+
+If you want to do something that's not in those lists, please submit it as a new item and/or let us know about it in other ways ([[#How to contact us?|How to contact us?]]). We appreciate even simple code cleanups, adding comments etc. So if you find some code looking hard to understand and/or lacking comments, that may be a nice first patch...
+
+==== Some areas to look at ====	 
+The easiest and fastest way to help is pick one existing tracker item and start working with it. However, sometimes it may be better to just start improving a whole area of our codebase.
+
+As there are lots of tracker items it may not be easy to see what really needs to be done. The following list contains areas need the most help with:	 
+* '''Improve [[GUI]]''' Our GUI is MFC-framework based, with some customizations. It would be nice to bring it to 20'th century. Toolbars, dialogs, file compare panels etc etc.	 
+* [[Diffutils|Diffengine]] update (we are using old version of diffutils). This is '''hard'''.
+* Improve [[Installer|installer]]. Eg. archive support download should be one option?	Create MSI-based installer?
+* Check for updates / apply uppdates over net? [[Automatic Update]]?
+* Compare items over net protocols (http, ftp)? This should be done via some kind of protocol plugins, not in core code
+* [[Plugins System|Plugins]] need serious re-design (to be more stable and secure)
+* [[Filtering]] (kimmov will work with this too, but help is always welcome)
+* In-line difference highlighting in the file compare has many bugs to fix.
+
+=== How to contact us? ===
+
+The best way to contact our developers is by posting a message to [http://apps.sourceforge.net/phpbb/winmerge/ Developers-forum] or to winmerge-development [http://winmerge.org/support/mailing-lists.php mailing list]. We try to answer as soon as possible, but sometimes it may take few days for anybody to answer. Please be patient.
+
+=== Get the code! ===
+
+When you have decided to do something, grab a copy of the WinMerge source from [http://sourceforge.net/svn/?group_id=13216 Subversion] or you can download a [http://sourceforge.net/project/showfiles.php?group_id=13216 zipped version] of the source tree, do your changes, and then [[Submit Patch|submit a patch]]. After the patch is reviewed and accepted, we will [[Commit Patch|commit]] it into our Subversion repository.
+
+You can find more information about programming WinMerge in the Subversion directory [http://svn.sourceforge.net/viewvc/winmerge/trunk/Docs/Developers/ Docs/Developers/] and in this [[Main Page|wiki]].
+
+The general plan is to start people with anonymous Subversion access and let the regular developers commit their changes to the Subversion repository. Those developers that continue to contribute will be considered for developer status and write access to Subversion. But you need to submit a couple of patches to demonstrate that you can work as a part of the group, and can live with our coding rules and [[Coding Guidelines|guidelines]].
+
+=== Before you start... ===
+Please contact us ([[#How to contact us?|How to contact us?]])! Present your ideas to us, so we can discuss about them and decide if they are proper for WinMerge. We don't want to include everything just because somebody thinks it's cool. 
+
+<div class="note">
+'''Please discuss with other developers before starting new tasks!''' It would be a huge waste of everybody's time to submit a patch we cannot apply. Something being in one of our trackers (bug/feature request) doesn't automatically mean we want/need it.
+</div>
+
+=== List of tracker items ===
+So you don't have any idea where to start?
+
+Here is a list of tracker items that are good candidates for first items. They don't require too much work or deep knowledge of WinMerge internals.
+
+* TODO: {{Todo|1536263|#1536263}} WinMerge should clear its left-over temp files
+* TODO: {{Todo|1545395|#1545395}} Sanity check loaded option values
+* BUG: {{Bug|945234|#945234}} Infinite wait for VSS command
+* BUG: {{Bug|1034510|#1034510}} Use 'difference' instead of 'diff'
+* BUG: {{Bug|1196904|#1196904}} Copying diff lines seems inefficient
+* BUG: {{Bug|1411819|#1411819}} Clicking locationpane doesn't set active compare window
+* BUG: {{Bug|1482182|#1482182}} Folder compare: EOL style mixed numbers are confusing
+* BUG: {{Bug|1525737|#1525737}} Before initialisation complete, should not enable menu-bar
+* BUG: {{Bug|1529873|#1529873}} locks up when network drive crashes
+* <strike>BUG: {{Bug|1773883|#1773883}} List loses focus after shift+del</strike>
+* BUG: {{Bug|1879618|#1879618}} Zoom doesn't work for bitmap fonts
+* BUG: {{Bug|1893912|#1893912}} Runtime warnings from radiobutton groups
+* RFE: {{RFE|1031651|#1031651}} Show changed line stats
+* RFE: {{RFE|1116011|#1116011}} Better default layout of panes
+* RFE: {{RFE|1172563|#1172563}} ignore Timestamps within specific Timeframe
+* RFE: {{RFE|1178302|#1178302}} Better visualization for 1 binary file comparison result
+* RFE: {{RFE|1189076|#1189076}} Show Find-dialog over active file in editor
+* RFE: {{RFE|1199136|#1199136}} Would like to be able to rename panes
+* RFE: {{RFE|1207076|#1207076}} List line filters in config log
+* RFE: {{RFE|1230752|#1230752}} Alt+Down/Up should Work Even if Focus isn't on Main Pane
+* RFE: {{RFE|1405695|#1405695}} Allow drag&drop from folder compare
+* RFE: {{RFE|1481714|#1481714}} Different/Identical binary files
+* RFE: {{RFE|1575210|#1575210}} Find/Replace drop-down lists
+* RFE: {{RFE|1598119|#1598119}} external editor's option
+* RFE: {{RFE|1696043|#1696043}} Add "Hide folder" and "Hide folder and subfolders" to menu
+* RFE: {{RFE|1867364|#1867364}} Copy/honor original timestamp on Folder copy to target

@@ -1,0 +1,37 @@
+Virtual Machines are an excellent way to test software. Use them!
+
+= Available Virtual Machines =
+There are several virtual machine implementations available. Some of them are commercial, and some are freely available. We of course prefer the free ones! :)
+
+Free VM:s:
+* VirtualBox - [http://www.virtualbox.org/ http://www.virtualbox.org/]
+* Virtual PC - [http://www.microsoft.com/virtualpc/ http://www.microsoft.com/virtualpc/]
+
+Commercial:
+* VMWare - [http://www.vmware.com/ http://www.vmware.com/]
+
+= Terminology =
+Two terms used later in the text:
+* ''host (OS)'': computer's main OS installation, which boots the computer
+* ''guest (OS)'' : the OS installed into VM, run and controlled by the VM software
+
+= Before Installing =
+Check before installing that you have:
+
+== Enough Disk Space ==
+Virtual machine software itself does not require much space, but every virtual machine is a real operating system installation. So you need 5-10 gigabytes of disk space for every virtual machine.
+
+Some software allows creating "cheap" copies which only clone changed files. So the new machine doesn't take much space if you don't make big changes to it.
+
+== Enough Memory ==
+Virtual machines reserve some amount of memory. That memory cannot be used by the host OS. So needed memory is: memory for the host + memory for the guest. If you want to run Win XP guest in Win XP host, you'll need at least 512 + 512 MB.
+
+= Useful Features =
+The most useful features are easy cloning and/or snapshotting.
+
+''Cloning'' means you take an exact copy of the current status of the machine. So basically one can install OS once to virtual machine, and then just take a new copy when needed for use.
+
+''Snapshotting'' means virtual machine saves the current status of the machine. Then later one can revert back to this exactly same state. This is very handy for experimenting / testing things. Take a snapshot. Do whatever testing/experimenting you want. Revert all the changes by going back to the snapshot. It is kind of taking a backup and then restoring it. Just a lot easier and faster.
+
+= Testing Installer =
+Testing installer is easy with the virtual machines. Create a new clone/snapshot, and run the installer. If something goes wrong, fix/report the bug, take new clone or revert to snapshot and try again. It is a real time saver. And it allows easy testing of updates too.

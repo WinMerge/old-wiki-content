@@ -1,0 +1,49 @@
+The user manual is generated from Docbook/XML files in <code>/Doc/Users/Manual</code>.
+
+See [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-manual.html ''readme-manual.html''] in [http://winmerge.svn.sourceforge.net/viewvc/winmerge/trunk/Docs/Developers/ Docs/Developers] directory in Subversion repository.
+
+= File contents =
+Rules:
+* Use [http://en.wikipedia.org/wiki/Utf-8 UTF-8]. No exceptions here. The XML has UTF-8 defined as encoding, so if the file is not UTF-8 then our tools fail to build documentation.
+* Prefer to limit the line length to 80 chars.
+
+Especially when creating a patch, be careful that it is UTF-8 encoded. Otherwise we have a problem with our tools. One way to check the patch is open it to editor that can show file encoding. One such and good editor is [http://notepad-plus.sourceforge.net/ Notepad++].
+
+= Markup =
+Remember that markup does '''not''' define the look of the generated document. The markup defines the content. Instead of trying to make filename look different, mark it with <pre><filename></pre> -tag. Stylesheet and CSS then take care of formatting filename in the documentation.
+Rules:
+* Use <pre><section></pre> -tag to mark sections instead of old <pre><sect1>,<sect2>...</pre> tags.
+
+= Style =
+Some style rules:
+* Use Sentence case in headings:
+ Shell integration 
+ Using the Compare Files window 
+
+= Screenshots =
+Use screenshots to illustrate GUI elements and behavior.
+
+Some rules about screenshots:
+* All screenshots must be PNG files. Do not use JPG or GIF.
+* Crop screenshots. Do not add 1600x1200 screenshot about one menu item.
+
+= Todo =
+* Match similar lines -feature/option is not documented (as reported in Open discussion forum topic [https://sourceforge.net/forum/forum.php?thread_id=2086917&forum_id=41637 ''Match similar lines''])
+* Also not documented options:
+** General: Ask when closing multiple windows
+** Compare: Filter Comments
+** System: Temporary files folder
+
+== Using WinMerge with other tools ==
+We could have own topic for using WinMerge with other tools. Some tools already mention WinMerge in their documentation, but still users have to figure out this for too many tools. And since command line parameters vary per tool, it is not always easy to find correct parameters and correct order.
+
+Tools to list:
+* TortoiseSVN (mentions in docs)
+* TortoiseCVS
+* Perforce
+* Mercurial
+* Bazaar
+
+= References =
+
+* topic ''[https://sourceforge.net/forum/forum.php?thread_id=1987050&forum_id=41639 Helping with documentation]'' in [https://sourceforge.net/forum/forum.php?forum_id=41639 Developers-forum].

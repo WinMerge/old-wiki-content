@@ -1,0 +1,31 @@
+WinMerge's [http://en.wikipedia.org/wiki/Graphical_user_interface GUI] is Microsoft's [http://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library MFC-framework] based. And programmed with C++.
+
+As an editor we are using [[CrystalEditor]]. Threre are couple of other custom components, but mostly it is plain MFC code.
+
+Some other parts of the GUI:
+* [[Location Pane]]
+
+= MultiMonitor support =
+WinMerge supports using multiple monitors. WinMerge remembers its position in two-monitor setup, and opens in same monitor than last time. Most dialogs also remember their positioning. (''But not all??'')
+
+Recent patch improved the multimonitor support by optionally keeping editor pane splitter always in monitor split.
+
+= Splash Screen =
+Splash screen is one bitmap, as described in [[Graphics]], list of developers and version number are added dynamically into it.
+
+= Statusbars =
+The main window has statusbar showing some general info in panes:
+* item counts when folder compare is active, or
+* difference count when file compare is active
+* status of caps lock, num lock and sroll lock keys
+
+== Folder Compare ==
+Folder compare window statusbar shows:
+* merge mode status
+* file's read-only statuses
+
+== File Compare ==
+File compare statusbar shows:
+* line/character positions and counts
+* file's encoding
+* file's EOL style

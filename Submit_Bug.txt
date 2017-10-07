@@ -1,0 +1,51 @@
+Submitting a good bug report is not always easy. But usually few minutes spent in submitting good report makes fixing bug faster and increases the probability the bug gets fixed.
+
+How to submit a good bug report:
+# Gather the information from WinMerge
+# Try to repeat the bug (if possible), write down the steps needed
+# Take a screenshot (if it is visual bug)
+# If you cannot submit files causing the bug, try to create new files which cause the bug to appear
+# Submit a new item to [http://sourceforge.net/tracker/?group_id=13216&atid=113216 Bug Tracker]
+# Please check later if developers have additional questions in bug item and respond those
+
+== Gathering the Information ==
+First thing you should check is WinMerge version number from its About-dialog. If you use any other translation than English, please mention it also.
+
+Second, create a configuration log (from main menu: Help | Configuration). The configuration log tells developers which options you were using and makes reproducing bugs a lot easier. Sometimes it is impossible to reproduce a bug without known configuration.
+
+== Repeat the Bug ==
+It is important to know if the bug can be repeated or if it just happens sometimes. Bugs that can be repeated are much more likely to be fixed and they usually get a bigger priority.
+
+== Take a Screenshot ==
+Sometimes one picture is better than long descriptions about wrong highlights etc. Please crop the image if possible, its no use to have 2100*1600 pixels screenshot when the bug is in 100*100 pixels area.
+
+== Create or Modify Files to Repeat the Bug ==
+This is sometimes tricky. But it also helps us a lot.
+
+Usually it is best to just experiment with little modifications about what modification in file (or folder) causes the bug to appear. When you know this, you can usually create simple files which show the bug.
+
+Remember files are not used to just prove the bug, they can be used with debugging the bug and verifying (by others) that the suggested fix really works. So files are important and big help for us.
+
+== Submit a Bug Item ==
+<div class ="note">We strongly recommend you register to SourceForge.net and submit bug report as logged-in user. This way you get notifications about possible questions developers have. And more importantly developers know there is even possibility somebody will answer the questions.
+
+Unfortunately anonymously submitted bugs, unless obvious ones, may get ignored because of missing information.
+</div>
+
+Write the information you have gathered, and attach files (preferably) in one zip (or 7z).
+
+Try to describe the bug in Summary-field. Summary like "WinMerge bug" does not tell much to us. You can also use any of the keywords listed in [[Trackers]].
+
+=== Good Description ===
+
+Good description tells at least these two things:
+# How to repeat the bug (if it can be repeated)
+# What is the bug, what is difference of expected and actual behavior (of course crashing is a bug, but it is not always clear what one considers as a bug)
+
+If the bug can be repeated, please tell us how. Write simple steps what you do to bug to happen, like:
+ 1 Open attached files
+ 2 Go to second difference shown, place cursor to first line of the difference
+ 3 Press Alt+Left
+
+And describe the buggy behavior:
+ Difference should be copied to the left side, but only the first line gets copied.

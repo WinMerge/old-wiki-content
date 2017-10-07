@@ -1,0 +1,139 @@
+Novadays XML is everywhere. Lots of file/dataformats are XML. So it is very natural to WinMerge have a good support for XML also.
+
+== Comparing XML files ==
+WinMerge versions 2.4 and 2.6 come with plugin to ease XML file compare.
+
+But it would be good to have more effective XML compare than that. So, how we should compare XML files?
+
+== Project files ==
+WinMerge project files are XML files. Currently project files contain paths to compare plus possible filter name and subfolder inclusion. In future we want to have at least some compare option there too.
+
+== XML parser ==
+=== Internal parser ===
+WinMerge 2.4 and 2.6 have a mix of code for handling XML files. There is partial installation of expat parser files in <code>/Src/ExpatLib/</code> and <code>/Src/ExpatMapLib/</code>. Then there is custom parser code in form of Jochen's markdown and Perry's XmlDoc class build over it.
+
+=== Expat + SCEW ===
+WinMerge 2.7.x now uses [http://expat.sourceforge.net/ expat] XML parser and [http://www.nongnu.org/scew/ SCEW] wrapper for XML handling. They allow flexible DOM-like XML-tree handling.
+
+== Using SCEW ==
+Unfortunately documentation for SCEW isn't very rich, and it is a bit hard to read too. So there is short intro to using SCEW (in WinMerge):
+
+For starters, add the include line:
+<source lang="cpp">
+#include <scew/scew.h>
+</source>
+
+=== Opening the XML File (or creating a new file) ===
+Use C-lib functions for opening files, since SCEW function only accept ANSI paths. And WinMerge must support Unicode:
+<source lang="cpp">
+FILE * fp = _tfopen(path, _T("r")); // "r" for reading, "w" for writing
+</source>
+
+=== Parsing the XML File ===
+To parse a file, we need to create a parser:
+<source lang="cpp">
+scew_parser* parser = NULL;
+parser = scew_parser_create();
+</source>
+
+Set it to ignore whitespaces (generally a good idea):
+<source lang="cpp">
+scew_parser_ignore_whitespaces(parser, 1);
+</source>
+
+Parse the open file:
+<source lang="cpp">
+if (scew_parser_load_file_fp(parser, fp))
+{
+ ...
+}  
+</source>
+
+Get the XML tree:
+<source lang="cpp">
+scew_tree* tree = NULL;
+tree = scew_parser_tree(parser);
+</source>
+
+Get the root element for starting point:
+<source lang="cpp">
+scew_element * root = scew_tree_root(tree);
+</source>
+
+Now you can traverse the tree with many SCEW functions, including:
+<source lang="cpp">
+scew_element * element = scew_element_by_name(scew_element const* parent, XML_Char const* name);
+unsigned int scew_element_count(scew_element const* parent);
+scew_element* scew_element_next(scew_element const* parent, scew_element const* element);
+</source>
+
+More functions are listed in ''scew/element.h''.
+
+As these functions return pointer to existing element in the tree, there is no need to free/release those elements.
+
+But remember to free the tree, parser and filepointer after parsing:
+<source lang="cpp">
+scew_tree_free(tree);
+scew_parser_free(parser);
+fclose(fp);
+</source>
+
+=== Creating a new XML File ===
+When creating a new XML file you start by creating the tree and then adding root element into it:
+<source lang="cpp">
+scew_tree* tree = scew_tree_create();
+scew_element * root = scew_tree_add_root(tree, root_element_name);
+</source>
+
+Now you can use ''scew/element.h'' functions to add elements, including:
+<source lang="cpp">
+scew_element * element = scew_element_add(scew_element const* parent, XML_Char const* name);
+scew_element* scew_element_add_elem(scew_element* element, scew_element* new_elem);
+</source>
+
+You set the element data with:
+<source lang="cpp">
+XML_Char const* scew_element_set_contents(scew_element* element, XML_Char const* data);
+</source>
+
+Once tree is formatted, set encoding to UTF-8 (which is what we want to use in WinMerge):
+<source lang="cpp">
+scew_tree_set_xml_encoding(tree, _T("UTF-8"));
+</source>
+
+And set it to stand-alone XML file:
+<source lang="cpp">
+scew_tree_set_xml_standalone(tree, 1);
+</source>
+
+Then you can write the file:
+<source lang="cpp">
+scew_writer_tree_fp(tree, fp)
+</source>
+
+'''Note:''' Parser is not created when writing the data!
+
+And remember to free the parser after you've done with the data and the file.
+
+=== Examples ===
+There are couple of simple examples in ''scew/examples''. And Project file code in ''Src/ProjectFile.cpp'' and ''Src/ProjectFile.h'' work as an example too.
+
+== Development ==
+Some future development ideas:
+* convert filter definition files to XML
+* options import/export to XML files
+* use XML files as options storage instead of registry
+* better XML file compare support. What this means in practice? Can we compare individual elements in XML tree?
+
+=== Convert Using Expat + wrapper ===
+We'll convert XML code to use [http://expat.sourceforge.net/ expat] XML parser and [http://www.nongnu.org/scew/ SCEW] wrapper for it. This allows simple handling of XML files in C/C++ code. 
+
+''- Conversion is now done for project files.''
+
+There are several steps needed for this:
+* check if we can drop markdown also - it might be used by archive support/Merge7z ?
+'''Jtuc:''' WinMerge uses markdown for 7-Zip version detection, and for encoding detection of XML and HTML files. Besides, I used to have plans for a UniFile derived class that employs markdown to canonicalize whitespace in XML files on the fly while populating the CrystalEdit.
+
+Unit testing:
+* Project file loading cases are in repository and all tests pass.
+* Project file saving tests are not yet written.

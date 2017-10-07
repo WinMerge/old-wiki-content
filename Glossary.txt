@@ -1,0 +1,38 @@
+There are lots of technical terms in WinMerge's application domain. And some terms may even have multiple meanings depending on the context they are used. So it is good to define the terms we use.
+
+= General =
+; Diff
+: Text file compare program in Linux/Unix (part of Diffutils). Outputs patch files, and 'patch' and 'diff' usually mean the same thing. In WinMerge 'diff' usually means one difference block in text files.
+
+; EOL
+: In text files there are special characters marking the end of the line. There are three different characters (or combinations) in use:
+* DOS/Windows
+* Unix (Linux)
+* Mac (old ones)
+See also the Wikipedia [http://en.wikipedia.org/wiki/Newline article].
+
+; Patch
+: ''diff'' output of two text files. Can be used to transfer changes between files. Notice the difference to binary file patches and other constructs many times referred as patches. There are also some extensions to patch format, e.g. Subversion and Git extend patch format and those extended formats are not compatible with traditional patch files.
+
+; Conflict (file)
+: When VCS system tries to merge two files automatically, but cannot, it creates a conflict file. This file contains differences in the two files added into one file. The conflict file cannot be used without ''resolving'' it first.
+
+; Mixed EOL style
+: File can have more than two EOL styles used in it. Then we say it's EOL style is mixed.
+
+; MRU
+: Most Recently Used. In WinMerge used when referring to remembering last used paths.
+
+; Resolving (conflict file)
+: Doing a manual merge of differences in two conflicted files. This produces one merged file from two different files in the conflict file.
+
+= Folder Compare =
+; Recursive compare
+: Compare that lists all subfolders and files inside them
+
+= File Compare =
+; Blank line
+: Line that has no content, only EOL characters. Its length is 0.
+
+; Ghost line
+: A blank line added by WinMerge to match line count in diffs and keep files visually in synch. Ghost lines have gray background.

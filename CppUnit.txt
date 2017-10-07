@@ -1,0 +1,101 @@
+[http://cppunit.sourceforge.net/cppunit-wiki CppUnit] is a unit-testing framework for C++ code. [http://cppunit.sourceforge.net/doc/lastest/cppunit_cookbook.html CppUnit Cookbook] is the definitive guide for the CppUnit. However it is a bit hard to follow and understand as the examples aren't simple after all.
+
+CppUnit sources are in /Externals/CppUnit. Current version is 1.12.
+
+CppUnit is generally considered being hard to deploy and use. However we now have the basic infrastructure in repository ready for compiling. So for now on the hardest thing is to write the test cases. :)
+
+== How to compile and run ==
+
+To start using CppUnit with WinMerge you need to:
+* compile CppUnit
+*# Open CppUnit's Visual Studio project ''CppUnitLibraries.dsw'' from ''/Externals/cppunit/src'' (kimmov: I've compiled it with VC6 and VS2003.Net).
+*# compile target ''debug'' - which creates a ''cppunitd.lib'' file into ''cppunit/lib''
+*# copy the lib file into ''/Build/CppUnit'' folder - unit tests will be compiled against this library file.
+* Compile and run unit tests
+*# open the unit testing project from /Testing/CppUnit (''StringDifferencing'' is the first I created and should be a good starting point)
+*# the unit testing project should compile without changes, but it is possible you need to alter some path settings.
+* run the executable - it shows tests run and results.
+
+== Writing Tests ==
+Some guidelines for writing the tests:
+* use CppUnit macros to create cases, add them to suites, and run them
+* remember that triggering assert returns from the current function so rest of the tests in same function are not run
+** several similar tests can be added to the same function
+** write only similar tests to one function
+** more complex tests should have own functions
+* prefer writing only same area tests to one testcase (class)
+** helps maintaining tests
+* testing private / protected functions require writing test functions to class to be tested
+** those functions should only be wrappers for private / protected functions, preferably only conditionally compiled in when testing
+
+Creating a new project for unit tests might be challenging task, depending of the files tested. So it is easies to just add new tests to existing project.
+
+=== Adding Tests to Testcase ===
+This is the easiest way. Each testcase is a class, and each test is one function in that class.
+
+So new test is added by writing a new test function. Test functions are prototyped like:
+<source lang="cpp">
+ void function();
+</source>
+there is no return value or parameters. Test functions are usually private or protected functions.
+
+Test function succeeds if there is no asserts hit. Success return can also be caused by CppUnit macros.
+
+==== Writing Testcase function ====
+Function code itself uses CppUnit's macros to inform the system about test result. Most common case is just:
+<source lang="cpp">
+ CPPUNIT_ASSERT(my_func(param));
+</source>
+which reports success when my_func() returns success and reports failure when my_func() returns failure. There are several variants of assert macros, and there are macros just returning success/failure too.
+
+For example one could write these simple cases:
+<source lang="cpp">
+ CPPUNIT_ASSERT(is_odd(3));
+ CPPUNIT_ASSERT(sum(1, 2) == 3);
+</source>
+
+There are more macros to use in [http://cppunit.sourceforge.net/doc/lastest/group___assertions.html CppUnit Cookbook / Making assertions].
+
+Remember it is C++ code after all, so you can use variables and control structures to setup your test. Usually you need to set the function input and then check the validity of the output.
+
+==== Adding function to Testcase ====
+Somewhere in the header (.h) file of the testcase class, there are lines like:
+<source lang="cpp">
+ CPPUNIT_TEST(Identical1);
+ CPPUNIT_TEST(Identical2);
+</source>
+
+Just add your function's name as parameter of the macro. After that to CppUnit automatically finds the new function and adds it as a test.
+
+=== Adding a New Testcase ===
+Adding a new testcase means adding new class containing tests (functions).
+
+Test case class is derived from CppUnit's template:
+<source lang="cpp">
+ class TestCase1 : public CPPUNIT_NS::TestFixture
+</source>
+
+Then it defines the class as suite and adds tests:
+<source lang="cpp">
+ CPPUNIT_TEST_SUITE(TestCase1);
+ CPPUNIT_TEST(Test1);
+ CPPUNIT_TEST(Test2);
+ ...
+ CPPUNIT_TEST_SUITE_END();
+</source>
+
+Two special functions can be used to setup the testing class before running the tests and releasing resources after tests are run:
+<source lang="cpp">
+ void setUp();
+ void tearDown();
+</source>
+
+Only special line you need in .cpp file is:
+<source lang="cpp">
+ CPPUNIT_TEST_SUITE_REGISTRATION(TestCase1);
+</source>
+which adds the testcase to set of cases to run.
+
+Rest is just implementing testing functions (and setUp() and tearDown() if needed)
+
+Look at the ready testcases for an example! Especially StringDifferencing/TestCase1 is meant for an example/template for new test cases.

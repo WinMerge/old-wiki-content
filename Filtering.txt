@@ -1,0 +1,66 @@
+Filtering one of areas WinMerge shines. And area we want to continue to improve in future.
+
+Our filtering is based on [[Regular Expressions]].
+
+= File Filtering =
+
+<div class="note">
+Big re-work for linefiltering is being planned. See [[File Filtering]] for more information.
+</div>
+
+File filtering is for folder compare. File filtering goal is to avoid comparing files/folders user doesn't care (temp files etc).
+
+Filtering happens after items are collected but before actual compare:
+# Collect items in folders to compare
+## after we find new item we match that item against file filter. If the item matches, we include/exclude item based on filtering rules.
+# Compare items in list of collected items
+
+== Storage ==
+
+File filters are stored in separate <code>.flt</code> files.
+
+The <code>.flt</code> file format cannot be expanded in practice without breaking ability for older WinMerge versions to read those files. So we need totally new format with new filename extension.
+
+= Line Filtering =
+
+[[Line Filtering|Line filtering]] is for file compare. Line filtering goal is to ignore changes user is not interested about.
+
+File filtering is applied when:
+# files are compare in folder compare (only for full content compare, as quick compare does not necessarily read the whole file)
+# files are opened to file compare
+# files are rescanned in file compare
+
+2.7.1.6 experimental and later releases have so-called "post-filtering", where filters are applied ''after'' the actual compare:
+# load files
+# compare files using diffutils engine
+# post-filter difference list returned by diffutils
+
+== Storage ==
+
+Line filters are stored into registry (accessible using OptionsManager).
+
+= Making File- and Line-filters to Work Together =
+
+Currently (as of 2.8.0) line filters and file filters are independent in implementation and in compare results.
+
+However, it would allow some very interesting use cases if we could combine their effects. Some ideas:
+* determine applied line filter with file filter
+** have a file filter: <code>\.cpp</code> and have a line filter <code>^//</code> to filter some comments from <code>.cpp</code> files.
+** negation could be useful too, applying line filter to all files, except...
+* a lot easier filter selection for user, user only selects applied filter set, which includes line- and file-filters
+* in same storage, editing easier
+* speed, line filters only applied to files wanted, not all files
+
+== Combined Storage ==
+Current file filter-file format is hard to expand, and even harder to add line filters to it. So we just should create a new storage.
+* line filters must be also able to be stand-alone, without any file filters
+
+== GUI ==
+This is a challenge. Filter selection must be a snap, click from dialog/dropdown. And handling of single filters/combinations shouldn't be too much work either.
+
+= Todo =
+* Combine file filters and line filter definitions to same file.
+** XML file
+* Filter based on path, not just filename
+* Apply linefilters to only certain files (determined by file filter rules?)
+** Apply different filters for different filesets

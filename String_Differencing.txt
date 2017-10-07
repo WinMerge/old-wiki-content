@@ -1,0 +1,52 @@
+String Differencing is not a compare engine as is. It is more like a tool we use for getting differences inside two lines for editor. So editor can highlight these changes.
+
+= Differences =
+
+String differencing understands the same compare options than other compare engines. It actually '''should''' match those engines as much as possible. Though it must do more job since other two engines only see there is '''some''' difference. But String difference must detect '''what''' the actual difference is.
+
+== Words and Characters ==
+
+Most interesting changes happens in words and characters (visible changes). Whole word or just some characters in word change.
+
+For example, if we have lines:
+
+ This is <strong class="highlight">one</strong> example string.
+and
+ This is <strong class="highlight">second</strong> example string.
+
+Differencing naturally highlights word ''one'' from first string and ''second'' from second string. 
+
+And in another example:
+
+ void func<strong class="highlight">First</strong>Test();
+and
+ void func<strong class="highlight">Second</strong>Test();
+
+Differencing highlights ''First'' part from first word and ''Second'' part in second word. But it even works like this:
+
+ void f<strong class="highlight">i</strong>rstTest();
+and
+ void f<strong class="highlight">1</strong>rstTest();
+
+where ''i'' is changed to ''1''.
+
+== Whitespaces ==
+Whitespaces are trickier. Remembering WinMerge allows to ignore whitespace differences.
+
+Simplest example is adding a new word to line:
+
+ This is example string.
+and
+ This is <strong class="highlight">another </strong>example string.
+
+As is easy to see, adding new word added new whitespace character, which must be highlighted.
+
+== Status ==
+Currently it works pretty good in simple cases. But there are lots of problems with non-trivial cases. [[InLineDifferencingThoughts]] has some ideas for improving the feature.
+
+== Unit Tests ==
+There are initial [[CppUnit]] unit-tests in source repository in ''Testing/CppUnit/StringDifferencing'' folder. Unit tests were recently extented and now they already have fine coverage. But of course there can be always more, as this is tricky area...
+
+== Future developments ==
+* Should string differencing handle also regular expressions?
+* ''Toolify'' - make it easily accessible from other code (whenever other code needs string differencing)

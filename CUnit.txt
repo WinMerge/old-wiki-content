@@ -1,0 +1,3 @@
+[http://cunit.sourceforge.net/ CUnit] is unit-testing framework for C. It is not yet in our source tree, but will be added once first test are added.
+
+Testing with CUnit is easy. You write functions running test code, and use CUnit's macros to check return values.

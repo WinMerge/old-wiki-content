@@ -1,0 +1,109 @@
+This page lists several tools we use with WinMerge development.
+
+= InnoSetup =
+InnoSetup, available from [http://www.jrsoftware.org/isinfo.php www.jrsoftware.org] is used for creating WinMerge installers.
+
+Working with installer is expained in
+[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-InnoSetup.html readme-InnoSetup.html].
+
+= Doxygen =
+Doxygen, available from [http://www.doxygen.org/ www.doxygen.org] is used to create code documentation.
+
+Our basic rule is that every class, struct, enum, and function must be documented. Unfortunately we still have lots of undocumented old code.
+
+Documentation format is explained in [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-developers.html readme-developers.html].
+
+Example function/variable documentation in <code>.h</code> file:
+<source lang="cpp">
+/**
+ * Current difference index.
+ * This variable tells the current difference index
+ * in the difference list.
+ */
+ UINT m_index;
+</source>
+
+Example function documentation in <code>.cpp</code> file:
+
+<source lang="cpp">
+/**
+ * @brief Short description of the function.
+ * Longer description of the function in next line.
+ * @param [in] param1 Param going in, not returning value.
+ * @param [in,out] param2 Parameter going in and returning value.
+ * @return Return value(s).
+ */
+int example_func(int param1, int * param2)
+{
+}
+</source>
+
+=Scripts=
+There are many scripts scattered around our folder structure. Scripts are used for things like:
+* create user manual
+* compile languages
+* build WinMerge
+* run some tests
+* create changelog
+
+Most scripts are written in VBScript, couple are DOS batch files, etc.
+
+===/ (root folder)===
+'''Build Script:'''<br>
+* <code>buildall.bat</code> compiles almost all WinMerge projects. Only works directly with VC6, later VS versions need all projects first converted.
+
+===Src===
+'''Version set script:'''<br>
+<code>SetResourceVersions.bat</code> sets version to all .rc files. Must be run before compiling releases.
+
+===Src/Languages===
+Scripts in this folder are related to building / generating / updating translations related files.
+
+'''MergeLang.dll building:'''<br>
+* <code>BuildMergeLangDll.bat</code> builds <code>MergeLang.dll</code> needed by translation system.
+
+'''Creating PO template file:'''<br>
+* <code>CreateMasterPotFile.vbs</code> creates PO template file used for translating.
+
+'''Translation status generation:'''<br>
+* <code>GetTranslationsStatus.vbs</code> generates translation status statistics.
+
+'''Updating PO files:'''<br>
+* <code>UpdatePoFilesFromPotFile.vbs</code> updates all PO files from POT file.
+
+===Tools/Scripts===
+This folder should be default place for new scripts.
+
+'''ChangeLog Script:'''<br>
+* <code>changelog.py</code> is a Python script creating a changelog from SVN log.
+
+'''Build Script:'''<br>
+* <code>create_release.py</code> is a Python script taking care many tasks in creating a release.
+
+'''Manual build scripts:'''<br>
+* <code>BuildManualChm.bat</code> builds Windows HTML Help -formatted manual.
+* <code>BuildManualWeb.bat</code> builds HTML -formatted manual for web.
+
+'''Resource scripts:'''<br>
+* <code>CheckMenuResources.vbs</code> checks menu resources for missing mnemonics or description strings
+* <code>CheckUnusedResources.vbs</code> checks for resource IDs that are not used anymore
+
+'''Translation update script:'''<br>
+* <code>UpdateTranslations.bat</code> updates translation files
+
+=Sysinternals Tools=
+[http://technet.microsoft.com/en-us/sysinternals/default.aspx Sysinternals] has many very good and useful tools:
+* [http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx Process Explorer] is very handy tool for managing and examining processes
+* [http://technet.microsoft.com/en-us/sysinternals/bb896645.aspx Process Monitor] allows monitoring process, its resource usage (files, registry...), possible error codes...
+
+=Unicode Supporting Editor=
+Having a good Unicode-supporting editor is essential when working with Unicode files. Many editors support
+Unicode, but most of them don't allow selecting encoding etc. Window's Notepad supports Unicode, but it also always writes BOM bytes for UTF-8 files (see the [http://en.wikipedia.org/wiki/Byte_Order_Mark BOM] -article in Wikipedia).
+
+'''[http://notepad-plus.sourceforge.net/ NotePad++]''' is an excellent editor with lots of handy features.
+
+= Virtual Machines =
+[[Virtual Machines]] are very useful especially when testing installer.
+
+= Mercurial =
+Even though we use Subversion as our version control, [[Mercurial]] is very handy for working with patches locally.

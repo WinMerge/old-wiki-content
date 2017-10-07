@@ -1,0 +1,65 @@
+File filtering is very powerful (and one unique) feature of WinMerge. However, current 2.6.x implementation has some serious limits that prevent adding many much needed and wanted features. So it is time to start re-designing the file filtering feature.
+
+If you want to comment any of the content in this page, please do so in discussion -page, or preferably in mailing list or forum in Sf.net.
+
+= Objectives =
+First we'll need to really describe the feature. What we want from line filtering?
+
+<div class="note">The main objective of file filtering is allow user to select what items are compared and what items are ignored</div>
+
+Another important objective is to group items by filters. Basically user should be able to say "I want files *.cpp in folder /Src" to be my source files". These groups can be then handled in different ways during compare and in GUI. One example is applying line filters to items in groups.
+
+Objectives as a list:
+# Allow including or excluding items based on full path
+# Allow grouping/labeling items (based on include rules)
+# Flexible and easy filter definition and management
+# Allow grouping of filters, group can be a list of filters to include all source files
+# Actual filtering applied to compare is combination of filter groups
+# Filtering is dynamic, filter groups can be added to and removed from compare results
+
+== User Interface ==
+
+We'll need a GUI which allows:
+# to edit single filters and filter groups
+# select sets to apply to compare
+
+For filters and groups editing I'd imagine tree-view would be best. One first adds a group and then adds filters into it. Filters can be also moved between groups etc.
+
+Selecting filter groups for compare is harder. Basically it could be list of filter groups with some descriptions. But it should be very easy and obvious to use too.
+
+One very important change to 2.6.x system will be that filters or groups are not defined by file they are stored into. Files are poor boundary and cause many kinds of problems (just naming being one of them). Instead, this new system will load all filters from all files it can find. So user won't choose ''file'' where filter is but filter groups loaded from several files.
+
+It will still be wise to split filters to several files, but most users don't even know about filter files anymore. Only when they create or edit filter groups they need to determine file for storage.
+
+= Rules and Rule Sets=
+
+To expand above objectives, we'll define ''rule'' being one matching rule (regexp). One or more rules are combined into rule set.
+
+* Filters must be defined as ''rules''
+** The rule is defined as regular expression or as DOS command-prompt-style matching (the latter being lower priority now)
+** The rule is be inclusive or exclusive
+*** The inclusive rule includes items that match
+*** The exclusive rule excludes items that match
+** The rule matches filename, path, or some other item attribute (TBD)
+*** Path rule matches full path (including filename)
+*** Filename rule matches only file's name whatever the full path is
+**** Shortcut for full path rule, as the most common case will be to match filenames
+*** Other attributes need new ideas still...
+* One or more rule combines a rule set
+** Set has a label as identifier
+*** Maybe we'll need GUID later for filter generation purposes?
+** Set has type of filter or label
+*** Filter set includes or excludes items from compare
+*** Label set only gives a label for matching items
+** Rules in rule set are matched from first to last, if a rule matches to item, rules after that are not tested
+*** Ordering is defined by priority or placement in the set?
+* For compare, one or more filter sets are selected
+** How do we order sets? In GUI only?
+** If rule in one set matches, other sets are not evaluated
+
+These definitions give us a very flexible framework for filtering. Especially having filter rules in labeled sets allows some very cool things.
+
+Idea is to combine actual rules for compare by selecting sets to match. For example one set could be "Exclude source control files" and another is "Exclude temp files" then using those two sets ignores source control and temp files from compare. Third rule could be "Interfaces" which sets "Interface" label for all I*.h files.
+
+= File Format =
+Filters are stored into XML file. Expat XML parser is used to read/write the file.

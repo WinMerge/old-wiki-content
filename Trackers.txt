@@ -1,0 +1,52 @@
+[http://sourceforge.net Sourceforge] provides us resources like several trackers for different item categories (bugs, patches, feature requests).
+
+= Keywords =
+Sourceforge trackers are quite a limited in regards of managing them. Handling long list of items get hard and tedious. There  is a group attribute, but it is impossible to see that attribute from item list.
+
+One way to ease managing is to use keywords in summary line to categorize items. For keywords to work, we all must use same keywords. These keywords are currently used:
+* Docs - other documentation than user manual
+* Filter - for file- and linefiltering
+* Installer - installer items
+* LineDiff - items related in-line differencing and highlighting
+* Manual - items related to user manual
+* Plugins - Plugins related issues
+* ShellExtension (or ShellExt) - ShellExtension related items
+* Trivial - for [[Submit Patch#Trivial Patches|trivial patches]] that clean the code, but don't fix bugs or add new features
+* VSS - Visual Source Safe
+
+To use these keywords, just add them into the summary line:<br>
+<code> [Keyword] This is a bug </code><br>
+or<br>
+<code> Keyword: This is a bug </code>
+
+= Bugs =
+The bug tracker is the most important tracker. We should be able to fix all the bugs. Its about quality and trust (that WinMerge works correctly). And unfortunately the bug list gets longer all the time.
+
+One problem is there are many bugs that miss required information or just cannot be reproduced by the developers. And if the bug is submitted anonymously, we cannot even contact submitter. This kind of bugs are usually closed without actions in couple of months.
+
+Bug submitting instructions: [[Submit Bug]]
+
+Most bugs are fixed pretty quickly and they disappear from bug list fast (usually in few days). So what is left to bug tracker is all those hard bugs. Most of them are harmless for normal use of WinMerge (which is why they don't get so much attention).
+
+Simple patches can be attached to bug items. If you are not sure if the patch is simple, submit it into patch tracker.
+
+= Patches =
+Patch tracker is place for developers (and anybody else wanting to help us) to submit patches for WinMerge.
+
+See [[Submit Patch]] for more info about how to submit good patch items.
+
+= Todo =
+This is a developer-only tracker (only developers move or submit items into here). Items in Todo-tracker are items that are deciced to be implemented/fixed. That does not mean they are going to be fixed anytime soon. Big difference to Feature Request  tracker is, items there are just wishes from somebody (usually not from developers).
+
+= Feature Requests =
+I think this tracker is just mis-named. It should be Feature Wishes, as that it is about. Users (and developers) post ideas and wishes about new features (or feature improvements) there. As mentioned in many places, there absolutely are no promises to implement these wishes.
+
+= Attachments =
+Tracker items can have attachments. Unfortunately SourceForge.net allows only ''submitter'' and ''assigned'' person to attach new files. So if you aren't submitter and item is not assigned to you (which requires being in development group) you cannot attach files.
+
+Second restriction is size limit of 250KB for one attachment.
+
+= Item Pages =
+As the Sf.net trackers are pretty useless for real tracking, we'll create wiki status pages for important tracker items.
+
+Currently there is status page for [[Bug 1976241]].

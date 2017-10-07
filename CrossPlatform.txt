@@ -1,0 +1,130 @@
+== Reasoning ==
+There is a real interest among users for cross-platform WinMerge (though name may not be appealing for Linux-users..).
+
+=== Pro ===
+Why we really want cross-platform support:
+* '''users want this!'''
+** can use familiar tools when switching to Linux
+* show that we can!
+* lots of positive feelings
+* '''more developer interest'''
+** there are tens of interesting projects for people to choose for (when they look for a project to help)
+*** people don't just come to us, we need to be ''interesting enough'' for them to join
+** free tools (which current ones aren't)
+** cross-platform is cool!
+** possibility for learning
+** get a lot of very valuable experience
+** for most people there is no interest nowadays in learning MFC, and MFC isn't easy
+*** MFC is already preventing people to contribute, its not free and not everybody wants to buy expensive Visual Studio when there are free alternatives
+* possible that we only need to do ''portable enough'' Windows implementation, and later get more help with Linux?
+
+=== Against ===
+Why we should consider it carefully first:
+* '''we probably need to rewrite lots of editor code/functionality'''
+** lots of which is core WinMerge functionality for showing differences
+** which means to get a ''working'' WinMerge is lots of work and big task, it cannot be done in small steps, feature per feature
+* feature/functional parity probably not possible - need to think about new ways to im
+* amount of work required
+** development
+** documentation
+** releasing, building...
+** support
+** learning new tools and framework
+* limited resources get split even more
+* not all current developers are interested in this?
+* '''risk of making WinMerge worse in Windows'''
+** must be careful to not scare users/developers
+* '''will it be ''WinMerge'' anymore? (project identity?)
+
+== Status ==
+As of 2.9.x start.
+
+WinMerge GUI code is uses MFC heavily. There are some custom controls and tweaks done. CString, CArray, CList etc are still used a lot all around the code.
+
+There has been an ongoing effort to convert backend code to use String class (STLs string/wstring) and so get rid of CString. Lots of this work is still to-do. 
+
+== The Two Approaches ==
+
+Converting WinMerge to a cross-platform software is not an easy task. There are basically two approaches to this:
+# separate non-GUI code to library (or libraries) and build separate GUI's using backend libraries
+# convert whole code to some cross-platform framework
+
+=== The Library-approach ===
+This is perhaps the most practical approach. One idea, [[Compare Library]] is detailed in its own page.
+
+Basic steps:
+# remove MFC and Windows specific code from most of the backend code (using STL is one way)
+#* GCC (Cygwin/MinGW) build could be a good first target
+#* still pure Windows support
+#* Could use APR or Boost libraries for backend
+#* 'librarization' is not necessary at begin, we can just use ifdef'ing and separate source folders etc
+#** library/libraries would need defining API(s) which would slow down development
+# start converting GUI code to another framework, in side of MFC GUI
+#* what about threading and some other platform specifics?
+#* still pure Windows support, kind of adding second Windows GUI at first
+# work Linux etc support for second framework
+#* even with cross-platform toolkit there is some fun with building, configuration etc
+# '''A lot later:''' See if we can drop MFC GUI?
+#* for Windows users, ''just 2.8 with a bit different GUI'' won't be enough!
+#* so we definitely need improvements for MFC GUI too!
+
+We'd keep MFC GUI as primary GUI for Windows, but keep working on other(s).
+
+Pros:
+* no real dependency to one framework (which are mostly about GUI)
+* possible to keep working with MFC GUI
+* if plans go just wrong, we still have MFC GUI!
+
+Cons:
+* maintaining two (or more GUIs)
+** merge changes to other
+*** which gets harder over the time
+** how we even keep them in working state?
+* threading, synchronization, settings aren't cross-platform
+** need framework support or separate implementations (own wrappers / helpers)
+* MFC parity is hard to get for other GUI (current MFC GUI took years..)
+** other toolkit may look a long time as a second-class GUI
+
+=== The Whole Conversion-approach ===
+This is a lot more involved approach. Simply not realistic for us.
+
+Converting whole WinMerge to another framework would be a lots of work. Then there are things like learning new framework and new tools.
+
+== Frameworks and Libraries ==
+There are three frameworks we could use:
+* wxWidgets
+* QT
+* GTK+
+
+There is a good article [http://www.novell.com/coolsolutions/feature/11244.html Porting Windows MFC applications to Linux] about conversion from MFC to any of those frameworks. Worth reading!
+
+The choice will be hard.
+
+[[Cross-Platform_Library|Cross-platform libraries]] are discussed in their own page.
+
+=== Editor ===
+One big question is the editor component. Currently we use pretty heavily customized CrystalEditor. Whatever editor will be used, it needs some heavy modifications to be usable in WinMerge. These customizations may not be easy, and they most probably need to be maintained by us. Which means merge every time we update. Etc.
+
+Some editor features we'll need:
+* highlighting differences (whole line areas with different background color)
+* ghost lines (those missing gray lines)
+* in-line difference highlighting (with different background color)
+* undoing merges, not just single edit events
+* handling mixed EOLs
+
+== Resources ==
+Frameworks:
+* [http://www.wxwidgets.org/ wxWidgets]
+* [http://trolltech.com/products/qt QT]
+* [http://www.gtk.org/ GTK+]
+* [http://apr.apache.org/ Apache APR] [http://www.apache.org/licenses/ Apache License V2] is not GPL compatible, we can only link to APR libraries.
+* [http://www.boost.org/ Boost C++ libraries] (GPL-compatible license, can be used with WinMerge)
+
+Articles:
+* [http://www.novell.com/coolsolutions/feature/11244.html Article] about moving from MFC to Linux
+* [http://nixbit.com/cat//documentation/wyoguide/ Guide] for crossplatform development (with wxWidgets)
+
+Development forum threads:
+* [https://sourceforge.net/forum/message.php?msg_id=4349101 Hello/Ideas/plan] - Couple of messages about cross-platform, continued in thread below:
+* [https://sourceforge.net/forum/message.php?msg_id=3903660 Porting from MFC to new UI platform]
+* [https://sourceforge.net/forum/message.php?msg_id=3928370 Compare lib] - kind of buried idea already

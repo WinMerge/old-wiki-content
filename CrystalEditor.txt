@@ -1,0 +1,92 @@
+WinMerge uses modified version of the [http://www.codeproject.com/editctrl/crysedit.asp CrystalEdit] created by Andrei Stcherbatchenko as its editor component.
+
+== WinMerge specific changes ==
+New features added to the CrystalEdit:
+* new [[CrystalEditor Syntax Highlight Rules|syntax highlight rules]]
+* VS2005.net -style changebars
+* option for find and replace to not wrap end of file
+* support for showing EOL characters when whitespace characters are shown
+* customizing of syntax highlight colors
+* custom context menu
+* bookmarks can be added by double-clicking in selection margin
+* indicator for wrapped lines in selection margin
+* A new line style was added for the "ghost lines", which are a WinMerge-specific addition (implemented in WinMerge subclasses of both view and text buffer crystal classes)
+
+For WinMerge several features of CrystalEdit have been modified / fixed:
+* undo / redo practically were rewritten
+* text selection has been pretty much rewritten
+* whitespace characters printed are customized
+* unicode support
+* EOL type handling was rewritten (allows per-line EOL style)
+* handling of long lines was fixed
+* lots of fixes to syntax highlighthing
+* does not use editors file loading/saving code, but code in WinMerge core
+
+== Important classes ==
+There are lots of files and classes in CrystalEditor. However, these are ones you usually want to
+look at:
+* CCrystalTextBuffer (ccrystaltextbuffer.h) stores the file data
+* CCrystalTextView (ccrystaltextview.h) is the view class. This class is responsible for drawing the view contents, scrolling, word-wrapping, selections etc.
+* CCrystalEditView (ccrystaleditview.h) inherits from CCrystalTextView and adds an text editing functionality
+* CFindTextDlg (cfindtextdlg.h) implements the Find-dialog
+* CEditReplaceDlg (ceditreplacedlg.h) implements the Replace-dialog
+
+== Inheritance hierarchy ==
+
+CMergeEditView (adds lots of WinMerge-specific stuff)
+ < CGhostTextView (adds handling for ghost lines needed for difference display)
+  < CCrystalEditViewEx (adds syntax parsing)
+   < CCrystalEditView (adds editing)
+    < CCrystalTextView
+     < CView (MFC base class)
+
+CDiffTextBuffer (adds WinMerge's file loading & saving)
+ < CGhostTextBuffer (adds handling for ghost lines needed for difference display)
+  < CCrystalTextBuffer
+   < CCmdTarget (MFC base to handle routed MFC commands)
+
+== Handling Files with Differences ==
+The editor has its own line-based filebuffers. Each line has properties like text data, flags and EOL type.
+
+=== Showing the Files ===
+Basic flow for showing files is like this:
+# compare engine compares files and outputs list of differences. Every difference has line information for the difference, begin line and end line for both files.
+# differences in list are synchronized for showing them. This means we expand differences so that ''missing'' lines are added to side which has less lines in difference. When lines area added, it grows the line offset that nmust be added to next difference's line numbers.
+# difference list is run against editor's filebuffers. Lines are flagged as different and ''ghost'' lines are added in place of missing lines.
+# editor draws the lines according flags in filebuffers.
+
+=== Mapping Linenumbers ===
+There are two kinds of line numbers editor needs to be aware of:
+# line's real number in file
+# virtual linenumber which is get when differences are synchronized
+
+It is very important to understand which linenumbers are used/needed in every case. Basically every time we show linenumber to user, we must use the real line number, that is the linenumber user needs to find the line in some other editor. But internally we in most cases use the virtual linenumbers.
+
+''CGhostTextBuffer'' class has two functions to map between the different linenumbers:
+<source lang="cpp">
+int ComputeRealLine(int nApparentLine)
+int ComputeApparentLine(int nRealLine)
+</source>
+
+== Features ==
+=== Syntax highlighting ===
+CrystalEditor supports syntax highlighting via syntax parser files. Every parser file handles one type of syntax highlighting, by parsing file contents to different text classes like keywords and comments. Crystaleditor then colors these text classes with user-customizable colors. Available [[CrystalEditor Syntax Highlight Rules|syntax highlight rules]] and filetypes associated with them.
+
+When WinMerge loads files to file compare, it determines the file type from the file extension. This file type is then used to select the syntax parser.
+
+== Notes for altering editor code ==
+When altering editor code there are several points you must keep in mind:
+* code layout is different, it uses GNU-style brace placement and uses spaces to indent lines
+* in unicode builds TCHAR is two bytes, use sizeof() when counting sizes!
+* remember MCBS
+* before changing data, check that file is not set read-only
+* EOL bytes are stored separately to line contents
+* remember word-wrapping is possible, use word-wrap aware functions *subline*() etc
+* when moving cursor, set anchor position properly so that selections work logically
+* selection can be made to both directions, so selection end might be earlier than selection begin
+
+== Future improvements ==
+Some possible future improvements
+* Find- and Replace-dialogs could be modeless like in many modern editors
+* Allow Find- and Replace-dialogs to use both files
+* Implement document classes which handle syntax highlight, tabs etc per document class

@@ -1,0 +1,62 @@
+__NOTOC__ __NOEDITSECTION__
+{| width="100%" border="1" cellpadding="5" cellspacing="0" align="center"
+| colspan="2" style="background:#efefef;" |
+== Welcome to the WinMerge Development Wiki ==
+
+We currently have [[Special:Statistics|{{NUMBEROFARTICLES}}]] pages about WinMerge development. Please submit only development related information into this wiki.
+
+For users there is [http://en.wikipedia.org/wiki/WinMerge Wikipedias entry on WinMerge].
+
+'''[[Help Needed|We need your help!]]'''
+|-
+| style="border-bottom:3px solid grey;" valign="top" style="background:#fff0db;" |
+== Contents ==
+
+* [[General Development]]
+** [[Trackers|SourceForge.net Trackers]]
+** [[Releases]]
+** [[Options system]]
+** [[VCS integration]] Version Control Systems integration
+** [[Regular Expressions]]
+** [[XML]]
+** [[Reporting]]
+** [[Translation System]]
+** [[Translations]]
+* [[GUI]]
+** [[CrystalEditor|Editor component]] (CrystalEditor)
+** [[Heksedit|Binary file editor]] (Heksedit)
+** [[Graphics]]
+* [[Comparing]]
+** [[Compare engines]]
+** [[Filtering]]
+* [[Plugins System]]
+* Other Components
+** [[ShellExtension|Shell Integration]]
+** [[Installer]]
+* [[Testing]]
+** [[Unit Testing]]
+** [[Self-tests]]
+* [[Tools]]
+** [[Tracker shortcuts]]
+* [[Documentation]]
+** [[Glossary]]
+** [[Manual]]
+
+
+| style="border-bottom:3px solid grey;" valign="top" style="background:#fde1f0;" |
+== Developer Resources ==
+
+Developer documentation is available in:
+* [http://winmerge.svn.sourceforge.net/viewvc/winmerge/trunk/Docs/Developers/ Docs/Developers] -folder in Subversion repository
+** start from ''[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-developers.html readme-developers.html]''
+** compiling WinMerge ''[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/Compiling.html Compiling.html]''
+* as [http://en.wikipedia.org/wiki/Doxygen Doxygen] -generated code documentation
+
+Developer forums and mailing lists:
+* [http://winmerge.org/support/mailing-lists.php winmerge-development -mailing list] in SourceForge.net
+* [http://apps.sourceforge.net/phpbb/winmerge/viewforum.php?f=6 Developers-forum] in SourceForge.net
+
+== [[Developers]] ==
+* [[User:Kimmov|Kimmov]]
+
+|}

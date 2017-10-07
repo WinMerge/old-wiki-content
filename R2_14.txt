@@ -1,0 +1,41 @@
+= Branch R2_14 (WinMerge 2.14) =
+
+We [https://sourceforge.net/apps/phpbb/winmerge/viewtopic.php?f=6&t=272 plan at the moment the next stable Version 2.14 from WinMerge] and Kimmo do very quick look to changelog for new features/changes we want to port from '''Trunk''':
+
+== TODO ==
+
+* Better Unicode file detection for full contents compare ({{Tracker|2477657|#2477657}}) - ''need to look through but probably should port''
+* Add option for setting line difference wordbreak characters ({{Tracker|2655563|#2655563}}) - ''perhaps, depending if we port also Matthias' other word/char diff highlight patches. I'm not sure if this useful without those?''
+* Move translations to own folder - ''This was more of SVN repository reorganization and doesn't seem to be worth of the trouble doing in branch''
+* Allow disabling reading of unique folder contents ({{Tracker|2820067|#2820067}}) - ''might make sense to port?''
+* Make comment filtering work for folder compare ({{Tracker|3046938|#3046938}}) - ''need to consider''
+
+== DONE ==
+
+* <strike>New options page for Shell Integration options ({{Tracker|2433648|#2433648}}) - ''should port as it makes Options GUI clearer'' - already in 2.12/2.14</strike>
+* <strike>Detect Windows 7 and Windows 2008 in config log ({{Tracker|2599256|#2599256}}) - ''should port'' - already in 2.12/2.14</strike>
+* <strike>Show only "Copy to other side" item in file compare context menu ({{Tracker|2600787|#2600787}}) - ''should port'' - merged to 2.14 as svn r7316</strike>
+* <strike>Add menuitems for selecting automatic or manual prediffing ({{Tracker|2638608|#2638608}}) - ''plugin users appreciate this'' - merged to 2.14 as svn r7325</strike>
+* <strike>Remember last target folder for Copy/Move to in folder compare ({{Tracker|2659228|#2659228}}) - ''should port'' - already in 2.12/2.14</strike>
+* <strike>Initialize folder selection dialog to currently selected folder in options dialog (r6570) - ''should port'' - merged to 2.14 as svn r7332</strike>
+* <strike>Expand/collapse folders from keyboard ({{Tracker|2203904|#2203904}}) - ''should port'' - merged to 2.14 as svn r7317</strike>
+* <strike>Disable folder compare tree-view by default ({{Tracker|2714968|#2714968}}) - ''should port'' - already in 2.12/2.14</strike>
+* <strike>Improve detecting XML files in file compare ({{Tracker|2726531|#2726531}}) - ''should port'' - merged to 2.14 as svn r7318</strike>
+* <strike>Improve startup time ({{Tracker|2788142|#2788142}}) - ''should port'' - merged to 2.14 as svn r7324</strike>
+* <strike>Create config log file to My Documents-folder ({{Tracker|2789839|#2789839}}) - ''should port'' - already in 2.12/2.14</strike>
+* <strike>Installer: Don't set -x for TSVN command line ({{Tracker|2791093|#2791093}}) - ''should port'' - merged to 2.14 as svn r7320</strike>
+* <strike>Untranslated string ("Merge.rc:nnnn") was displayed in status bar ( {{Tracker|3025855|#3025855}}) - merged to 2.14 as svn r7331</strike>
+* <strike>Add accelerator keys for Shell context menu ({{Tracker|2823536|#2823536}}) - ''should port'' - merged to 2.14 as svn r7333</strike>
+* <strike>Improve editing of linefilter regular expressions ({{Tracker|3015416|#3015416}}) - ''should port'' - merged to 2.14 as svn r7338</strike>
+* <strike>Use new compare status icons for editor windows ({{Tracker|2205583|#2205583}}) - merged to 2.14 as svn r7341 and r7278</strike>
+* <strike>PCRE and SCEW updates - ''should port'' - done</strike>
+* <strike>Updating VS project files to VS2005 - ''probably, would make some other things easier (like porting SCEW and PCRE)'' -done </strike>
+* <strike>Allow editing context line count in patch creator ({{Tracker|2092180|#2092180}}) - ''should port'' - merged to 2.14 as svn r7502</strike>
+* <strike>Improve color options organization ({{Tracker|2818451|#2818451}}) - ''should port'' - merged to 2.14 as svn r7410</strike>
+* <strike>Add /xq command line switch for closing WinMerge after identical files and not showing message ({{Tracker|2827836|#2827836}}) - ''should port, people may already be depending on this switch'' - merged to 2.14 as svn r7416</strike>
+* <strike>Allow setting codepage from command line ({{Tracker|2725549|#2725549}}) - ''should port'' - merged to 2.14 as svn r7417</strike>
+* <strike>Pane headers not updated after language change ({{Tracker|2923684|#2923684}}) - merged to 2.14 as svn r7419</strike>
+* <strike>Allow giving encoding name as custom codepage ({{Tracker|2813825|#2813825}}, {{Tracker|3010934|#3010934}}) - ''should port'' - merged to 2.14 as svn r7417</strike>
+* <strike>Add new options dialog panel for folder compare options ({{Tracker|2819626|#2819626}}) - ''should port'' - merged to 2.14 as svn r7523</strike>
+* <strike>Add options GUI for quick compare limit ({{Tracker|2825628|#2825628}}) - ''should port'' - merged to 2.14 as svn r7524</strike>
+* <strike>Write config log as UTF-8 file (r7057) - ''should port'' - merged to 2.14 as svn r7527</strike>

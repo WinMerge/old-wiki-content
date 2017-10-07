@@ -1,0 +1,119 @@
+WinMerge has two very different compare procedures:
+* [[File Compare|File compare]] compares two files
+* [[Folder Compare|Folder compare]] compares two folders (and subfolders)
+
+While both procedures have [[Compare engines]] doing most of the work, above it they work very differently. GUI again tries to unify things as well as possible. For example:
+* folder compare only cares if files are different or identical, it does not care about file contents at all (except for determining the binary status). 
+* file compare is all about file contents. Where file resides in system, timestamps etc are not interesting for file compare.
+
+= Common Idea =
+Basic idea for compare is to feed compared data to one of [[Compare engines]], read the results and show results for user.
+
+Unfortunately it is not this simple, there are many complexities involved, e.g.
+* Unicode handling
+* filtering
+* plugin
+* differences in compare methods
+* per-compare engine options
+
+= Compare Options =
+Compare options are structured into own classes. <code>CompareOptions</code> class is base class having some common options we expect every compare engine needs. This class is designed to be general compare options class and as such the options in it may not directly map to any existing difference engine. Derived actual options classes must implement conversion methods to convert general options to diffengine options.
+
+<code>DiffutilsOptions</code> is derived from <code>CompareOptions</code> and adds ''diffutils'' specific options and methods. Also some conversion methods are needed. Inside diffutils compare options are global variables we set before the compare. WinMerge sets those globals before compare from <code>DiffutilsOptions</code> and then just forgets them. This means diffutils globals may have outdated values between compares, but so far that hasn't been a problem.
+
+<code>QuickCompareOptions</code> is derived from <code>CompareOptions</code> and adds ''Quick compare'' specific options.
+
+
+= Architectural Rework =
+By now it is apparent we need to rework our compare architecture. It is sad we let it go into current mess. ('''Kimmov:''' My fault, I let people mess with things they didn't understand or care to keep code maintainable)
+
+== The Problems ==
+The main problem with current architecture is mixed and unclear roles of ''CDiffWrapper'' and ''DiffFileData'' classes. They just don't make any sense anymore, after couple of years of random hacking. CDiffWrapper were supposed to be '''The''' wrapper for diffutils. Simple? Apparently not. Everybody wants their own wrappers or helper classes. So the DiffFileData class, which were supposed (when added) to only keep track of compared data/files. But it was expanded to handle also compare code in folder compare. But file compare was still left for CDiffWrapper.
+
+And what is worse, although CDiffWrapper and DiffFileData are doing much of the same functionality, their APIs are totally different. So unifying them isn't easy. It is still doable, and we must do it.
+
+In future, we may need/want more compare engines and more compare algotithms. Currently adding a new engine/algorithm is very hard. Partly because of all these inconsistencies and incompatibilities between compare classes and file/folder compare code.
+
+Now that DiffFileData using CDiffWrapper -problem is solved in repository, there is one major problem remaining: 
+
+''CDirDoc'' has both ''CDiffWrapper'' and ''DiffThread'' instances. CDiffWrapper is used just for compare options, as it can convert them to diffutils format. But some options are managed using ''CDiffContext''. So this is still quite a mixup.
+
+== Towards The Solution ==
+=== Interface for Compare Classes ===
+We can think of compare engines / algorithms being behind one interface. That interface has functions to set files to compare, compare options etc. And we'll get back results as list or maybe as statuscode?
+
+From that interface we can inherit actual compare classes. Inheriting from interface means we have quarantee they implement similar interfaces for basic tasks. Which makes it a lot easier to handle different engines/algorithms.
+
+=== DiffFileData ===
+I'm working on making DiffFileData just what it was originally - a wrapper for file data. I'm moving folder compare code out of it to new class. The new class may end up being just an temporary class while we re-org the code. But it is one important step towards cleaner compare code and architecture.
+
+''Update'': Ok, there is now FolderCmp class for folder compare. It has DiffFileData class for storing file data. But DiffFileData class doesn't anymore contain any compare code, all compare code was moved from it to FolderCmp.
+
+I'm still a bit confused myself about huge difference in DiffWrapper and FolderCmp classes. Looks like DiffWrapper has also lots of code that really don't belong to it and should be moved out of it..
+
+=== Results List ===
+Results from all classes/engines should be returned as similar structured list. This is pretty easy for folder compare, where we basically have items + some properties for them + compare code.
+
+But how to handle file compare? Line-based results are what diffutils output. But there can be other kind of results too.
+
+One idea might be to unify line-diffs byte-difference counting to this same interface. So that our one and only compare interface can handle line-diffs and byte-diffs. Then code calling diff-code can determine what diff-type it needs/gets from diff-code. That would allow easier development of line difference code also, which is a kind of hack currently - works nicely but at bit weird level thinking of compare code.
+
+== The Interface ==
+My ('''kimmov''') initial idea of the interface:
+<source lang="cpp">
+class CompareInterface
+{
+  virtual int GetFeaturesSupported() = 0;
+  virtual int SetFiles(const char * file1, const char * file2) = 0;
+  virtual int SetCompareOptions(const CompareOptions * options) = 0;
+  virtual int SetFilterList(const FilterList * list) = 0;
+  virtual int Compare() = 0;
+  virtual int GetResultList(DiffList * diffList) = 0;
+}
+</source>
+What else we need?
+
+And yes, patch creation, encoding checks, moved lines etc are missing. Encoding checks don't belong to compare engine. Patch creation and moved lines are per engine features that classes inherited from the interface can implement.
+
+= Other Ideas =
+
+== More Threading ==
+Our folder compare is very much serialized even though we run it in separate worker thread. That is; we read filenames, run filefilters, open files, compare contents, run linefilters etc. But these operations don't need to be serialized operations.
+
+We can have several threads running at the same time, e.g. :
+# collecting file- and foldernames
+# running filefilters
+# comparing file contents
+# running linefilters
+
+At first it may look all those operations are strictly serialized (we must first find the file before running file filter). But they are not. Almost every task has different set of data. Collecting phase searches for all files and folders it finds. And filefilters process them all. But filtered items don't go further in the chain. So for example collecting and filefilter task can process (many) next items while compare task is still running with earlier file.
+
+Second good threading possibility is with linefiltering. After compare task is ready, we have differences list ready. That list can easily be run through filtering independently from other tasks.
+
+First phase of collecting file- and folder-names is disk-intensive task, CPU is probably mostly idle. So letting another task to start comparing items would be a clear speedup.
+
+Also, using more creative threading probably makes compare faster in modern multi-core processors. Which is also very worthwhile goal.
+
+=== Threading in Practice ===
+I think we have already basic concepts pretty good in folder compare:
+* we have separate compare phases (in independent functions in dirscan.cpp)
+* we use one list for keeping compare results for whole compare
+* we already run the compare in the thread
+
+Easiest way to add more threading is to add new worker threads for every phase. Biggest problem is synchronizing the data (read: difflist). We can use:
+* per-phase lists
+* one list with careful locking
+
+Both approaches have their pros and cons. Per-phase lists cause lots item copying between lists. But it is pretty easy to implement. One-list approach requires careful (and somewhat tricky?) locking so that only certain phase can access certain items. Maybe this locking even prevents efficient threading?
+
+==== Synchronizing with event? ====
+Hopefully this idea will work. I intend to use just one list and two threads:
+#. thread does the collecting of items
+#. threads compares items in that list
+
+For synchronizing there is one event. That event indicates if there are items that are not yet compared in the list. In practice first thread sets the event every time it adds item to the list that needs to be compared. Second thread waits for that event, and once the event is set it starts going over the list from its previous position looking for items to compare. The thread also immediately resets the event. There might be items before compared item that are to be ignored, like filtered items or unique items. Once thread has compared the item(s) in the list, it goes back to waiting for the event to activate it.
+
+== Background Comparing ==
+To let user faster start working with results, we could do a first GUI update after reasonable amount of compare results are ready. And after that continue compare in background.
+
+One variation of this idea is to compare visible folder (in non-recursive compare) in main thread, then update the GUI and continue comparing (non-visible) items in subfolders in background.

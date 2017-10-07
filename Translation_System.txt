@@ -1,0 +1,138 @@
+= Introduction =
+WinMerge uses PO files as translation files in runtime. WinMerge reads (using a helper DLL file) the <code>[language name].po</code> file from the <code>Languages/</code> subfolder and uses strings from it to replace strings in English resources.
+
+The old system (WinMerge 2.6.x and earlier) of compiling satellite DLLs from per-language RC files was a lot of work developers to maintain, update and merge changes. RC files are also hard to translate. For example in dialog resources, the translated strings are in middle of other resource data and it is easy to miss strings.
+
+== Advantages ==
+* The developers don't need to merge changes at <code>Merge.rc</code> to all translations. (This was dull and error-prone work!)
+** This was many times a blocker to do GUI improvements! It simply was too much work to do e.g. dialog layout changes without a real good reasons.
+* The translators can use the great tool [http://www.poedit.net poEdit] or a simple text editor for the translation.
+* No extra step to compile the <code>.lang</code> files needed anymore.
+* Easier statistics creation about the [[Translations|translations status]].
+
+== Disadvantages ==
+* We currently don't support context specific translations. That means there is one translatable string for every ''unique'' English string. For example there is one string for every "Browse" button caption text. Usually this is not a problem, but sometimes translation could be different in different contexts.
+* Collecting the line numbers in PO files creates much noise in SVN.
+** Note that you can use <pre>"^#"</pre> -linefilter in WinMerge to filter out those changes
+
+= Working with the translation system =
+All the resource changes are done to <code>Src/Merge.rc</code> file (and to <code>Src/resource.h</code> when needed). '''Strings''' are propagated to the <code>Src/Languages/English.pot</code> file when building WinMerge. And to all <code>.po</code> files either by the script or by translators or tools.
+
+So to make a resource change:
+* edit the <code>Src/Merge.rc</code> (and <code>Src/resource.h</code>) files
+* build WinMerge in Visual Studio (or update <code>Src/Languages/English.pot</code> file with the script)
+* use the script to update all <code>.po</code> files
+
+== Using Resource Strings in the Code ==
+There are several functions declared in <code>Src/stdafx.h</code>:
+
+<source lang="cpp">
+	/** @brief Load string from string resources; shortcut for CString::LoadString */
+String LoadResString(UINT id);
+
+	/** @brief Wrapper around CMergeApp::TranslateDialog() */
+void NTAPI LangTranslateDialog(HWND);
+
+	/** @brief Lang aware version of AfxFormatStrings() */
+void NTAPI LangFormatStrings(CString &, UINT, LPCTSTR const *, int);
+
+	/** @brief Lang aware version of AfxFormatString1() */
+void NTAPI LangFormatString1(CString &, UINT, LPCTSTR);
+
+	/** @brief Lang aware version of AfxFormatString2() */
+void NTAPI LangFormatString2(CString &, UINT, LPCTSTR, LPCTSTR);
+
+	/** @brief Lang aware version of AfxMessageBox() */
+int NTAPI LangMessageBox(UINT, UINT nType = MB_OK, UINT nIDHelp = (UINT)-1);
+
+	/** @brief Format single-argument resource string and display via AfxMessageBox */
+int ResMsgBox1(UINT msgid, LPCTSTR arg, UINT nType = MB_OK, UINT nIDHelp = 0);
+</source>
+
+Usage of these functions is like their MFC counterparts (as mentioned in the comments). So to load a single string from resource, you write a code like this:
+
+<source lang="cpp">
+#include "stdafx.h"	
+// [...]
+	String myStr = LoadResString(IDS_MYSTRING);
+</source>
+
+<div class="warning">'''Do Not use CString class to load resource strings!'''
+CString-class has a constructor accepting resource ID as a parameter, and it loads the resource string. It is a handy way to load resource strings. And CString has also a LoadString() method for the same purpose. But unfortunately they do not work with WinMerge's translation system.
+</div>
+
+== Implementing Translation Aware Dialog ==
+You need to call the <code>CMergeApp::TranslateDialog(HWND h)</code> in the dialog's initialization code.
+
+For example:
+<source lang="cpp">
+/**
+ * @brief Dialog initialisation. Make dialog translatable.
+ */
+BOOL CMyDialog::OnInitDialog() 
+{
+	theApp.TranslateDialog(m_hWnd);
+	CDialog::OnInitDialog();
+	return TRUE;
+}
+</source>
+
+== Editing Merge.rc ==
+<code>Src/Merge.rc</code> contains English resources. All resource changes are done to this file. The translation system does not require anything special, the file is normal Windows resource file.
+
+Some notes about editing <code>Src/Merge.rc</code>:
+* You can't split strings over multiple lines:
+**<code>IDS_TEST "This is a short string\n<br />with a line break"</code> is wrong
+**<code>IDS_TEST "This is a short string\nwith a line break"</code> is right
+** (''Didn't Jochen already fix this?'')
+* You can use "<code>//#.</code>" comments to add ''extracted comments'' to the POT file:
+**<code>IDS_STATUSBAR_READONLY  "RO" //#. Abbreviation from "Read Only"</code>
+* You can use "<code>//msgctxt</code>" comments to add a context to the string in the POT file:
+**<code>POPUP "&Move" //msgctxt File/folder move</code>
+**You need at least [http://www.poedit.net/ poEdit 1.3.8] to edit PO(T) files with <code>msgctxt</code> strings
+
+= The Format of PO Files =
+A PO file, which is a textual and editable file, is made up of many entries, each entry holding the relation between an original untranslated string and its corresponding translation. And all translations are expressed in a single target language. One PO file entry has the following schematic structure:
+<source lang="perl">
+white-space
+#  translator-comments
+#. extracted-comments
+#: reference...
+#, flag...
+msgctxt context
+msgid untranslated-string
+msgstr translated-string
+</source>
+
+For more details look at [http://www.gnu.org/software/gettext/manual/gettext.html#PO-Files chapter 3] from the gettext manual.
+
+= Implementation of the Translation System =
+
+* Tim's first patch: {{Patch|1771319|#1771319 Generate language resource files from PO files}} created POT and PO files and scripts to create <code>.rc</code> files from <code>.pot</code> and <code>.po</code> files.
+* Jochen's patch: {{Patch|1804762|#1804762 UI translation without compiled lang files}} converted WinMerge to load translated strings from <code>.po</code> files in runtime
+
+Jochen explains it in the patch item:
+ Alongside with English.pot, CreateMasterPotFile.vbs creates MergeLang.rc,
+ which contains Merge.rc line number references in place of texts. Compiling
+ MergeLang.rc yields MergeLang.dll, which WinMerge loads in place of current
+ lang files. Then, after loading resources from MergeLang.dll, WinMerge
+ knows line number references, which lead it the way to translated strings
+ in .po files.
+
+All mentioned files are in <code>Src/Languages/</code>.
+
+= Merging PO Files =
+PO files from translators can be merged with WinMerge.
+
+<div class="warning">
+Do not merge line number changes! Line numbers '''must''' match to current version for system to work.
+</div>
+
+Line number changes are easy to ignore by using line filter like this:
+ ^#
+
+= Todo =
+* Update and improve documentation!
+* <strike>Remove files from the old translation system (including resource compiler, MakeResDll).</strike>
+* Create a translation page like [http://tortoisesvn.net/translation TortoiseSVN] it has?
+* <strike>Add syntax highlighting for PO and POT files</strike>

@@ -1,0 +1,5 @@
+Quick compare is a custom compare method used in folder compare. As name suggests, it is faster than diffutils compare. However it also ignores a lot of things so the speed comes in price of accuracy.
+
+Quick compare knows most diffutils compare options like whitespace ignore and EOL bytes ignore. But it does not know about linefilters.
+
+Quick compare basically just finds different characters from the files. And Quick compare can be configured to stop compare after first found difference.

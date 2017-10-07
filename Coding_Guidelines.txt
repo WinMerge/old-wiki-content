@@ -1,0 +1,155 @@
+These are not strict rules we enforce. But following these guidelines keeps code consistent and easier for everybdy to work with.
+
+= Prefer Clean Code =
+Avoid unnecessary tricks! Simple and easy to read code is usually best, tricks are rarely really needed. C++ allows all kinds of really ugly constructs, think twice if you really need them.
+
+If you find a code that you think could be improved, please [[Submit Patch|submit a patch]].
+
+== Code Formatting ==
+<div class="note">Editlib (CrystalEditor) and diffutils code use different code formatting from other WinMerge code. When modifying code in those components, follow their style, otherwise always follow WinMerge style.</div>
+
+Some formatting guidelines:
+* use tabs to indent the code
+* try to limit lines to 80 chars (for printing etc)
+* put braces in own lines, and don't indent them
+** you can leave braces out if there would be only one instruction inside, and code is easy to understand
+* surround operators with spaces
+* function, class, struct names begin with capital letter
+* variable name begins with small letter
+* in MFC code (GUI code), class member names start with <code>m_</code>, though other code should use this convention too
+
+<source lang="cpp">
+int ExampleFunction(int param1)
+{
+	int retval = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		retval += 10;
+		// Some other code...
+	}
+
+	if (retval < 100)
+		printf("Didn't reach 100...");
+
+	return retval;
+}
+</source>
+
+== Debug Code ==
+Always put debug-only code inside <code>_DEBUG</code> ifdef!
+
+<source lang="cpp">
+	// some code...
+#ifdef _DEBUG
+	// code for debugging only
+#endif // _DEBUG
+</source>
+
+There are lots of ready macros and CRT (C-runtime) functions to use for debugging. Please don't re-invent the wheel, use the existing facilities. In (MFC) GUI code <code>ASSERT()</code> -macro is the most used debug macro. It is a good way to make simple verifications. Another useful MFC macro is <code>VERIFY()</code>. If you want to print to output window in Visual Studio, use MFC TRACE() macro.
+
+In non-MFC code there are CRT macros like <code>_ASSERT</code>, <code>_ASSERTE</code> and <code>_RPTFx</code>.
+
+<div class="warning">
+Be careful to not add any functional code inside debug macros! Debug macros should only check for variable/class states, they must not alter variables or class state. Otherwise the code behaves differently in debug builds and in release builds, and makes finding bugs harder.
+</div>
+
+= Comments =
+Please always comment your code. Even if the code is obvious when you write it, it may be hard to understand for others. And it may be hard to understand for you after few months.
+
+Do:
+# comment every function, class, struct etc with [[Tools#Doxygen|Doxygen]] comments
+# answer the ''Why'' not ''What?''. I.e. explain why something is done, not what you are doing (code tells it).
+# keep the comments up-to-date. When you change the code, update also comments.
+
+Don't:
+# add comments with your name telling you changed something. We have a version control, so we see from version control who changed what. It is just unnecessary noise.
+# leave old version of code in comments. Remove old code. We have a version control and we changes and earlier versions from it.
+# be overly verbose.
+
+= Revision Keyword Comment =
+Although <code>$Id:</code> keyword was originally used with CVS, it also works with SVN. 
+
+So every source file should have following two lines in begin of them (you can use this as template):
+
+<source lang="cpp">
+// ID line follows -- this is updated by SVN
+// $Id: $
+</source>
+
+When file is checked out from SVN, lines look like:
+<source lang="cpp">
+// ID line follows -- this is updated by SVN
+// $Id: MainFrm.cpp 4375 2007-07-20 17:27:33Z kimmov $
+</source>
+
+There are lots of old-style comments mentioning CVS, please update them when modifying files.
+
+= License =
+WinMerge is [http://www.gnu.org/licenses/licenses.html#GPL GPL] licensed. So all the pros and cons of the GPL apply to WinMerge.
+
+Be careful that the code is properly licensed. After all, the proper licensing is the only way to protect our work from abusing it.
+
+The basic rule is simple: if you modify sources, compile them and distribute binaries, you must make modified sources available also. Even if it was just for testing some new bugfix or feature.
+
+Of course we'd prefer you to submit a patch for us at the first place. Eventually the patch will be included into next experimental release, which gets downloaded and tested by hundreds of users.
+
+== License Compatibility ==
+When you are adding new code, please prefer licensing it under GPL. That is the easiest solution for all of us.
+
+However, there are perfectly valid reasons for you to use some other license. And we can accept that. Just make sure that the other license you use is compatible with GPL! See [http://www.gnu.org/licenses/license-list.html License list] for more information.
+
+Even more importantly, when you are grabbing code elsewhere, be sure it is compatible with GPL before submitting it to us. E.g. Mozilla Org's MPL is not compatible and hence we cannot use MPL-licensed code in WinMerge.
+
+== License Block ==
+Every source code file should have a GPL license block at the beginning of the file. That is best way to ensure people understand the code they look at and/or modify is GPL licensed.
+
+<div class="note">Even though file does not have the license block, it still is under GPL. WinMerge as a whole is GPL licenced, so all code in WinMerge is GPL unless otherwise stated.
+</div>
+
+If you are adding code that is not GPL-licensed, be sure to include proper license block to the beginning of the file. Otherwise the code gets converted to GPL license!
+
+= Unicode =
+Please remember always that WinMerge is an Unicode application. Mostly this is visible in code when handling strings:
+* strings can be in UCS-2 (Windows native format) or UTF-8
+** most of the time UCS-2 is recommended
+** UTF-8 is used with XML handling, PCRE and when sending file data to diffutils
+* use CString, String or TCHAR for strings.
+** prefer String (from <code>Common/UnicodeString.h</code>) for non-GUI code instead of CString.
+** don't use ''char'' type when using UCS-2 strings, it is always a bug. ''char'' can be only used with UTF-8.
+* don't use ''strcpy()'', ''itoa()'' etc. There are macros which use TCHAR: ''_tcscpy()'', ''_itot()'' etc.
+* when calculating string table size, remember to use ''sizeof(TCHAR)'' as multiplier (tells size of one character in bytes). Unicode strings take two bytes per character.
+* when adding a string to the code, put the string inside ''_T()'' -macro (for example: <code>_T("Hello")</code>). The macro converts the string to Unicode string.
+
+= MFC / STL / WinAPI =
+There are several frameworks / APIs used in WinMerge. What framework and API to use depends on the what part of the code you are working with.
+
+== GUI code ==
+WinMerge's GUI is based on MFC. We use MFC view/document classes, containers etc. There is no way around this, you must know MFC to work with WinMerge GUI. With GUI it is best to use MFC classes instead of other libraries (like STL).
+
+== Other Code ==
+Most of the backend code (file handling etc) do not need any of MFC. There pure WinAPI and STL are recommended.
+
+The reason is MFC, while being a nice framework, seriously limits people's ability to work with WinMerge code. Compiling requires a commercial version of Visual Studio (free versions don't include MFC!).
+
+=== Strings ===
+There is a <code>String</code> class (defined in <code>Common/UnicodeString.h</code>) which is typedef of <code>std::string</code> for ANSI and <code>std::wstring</code> for Unicode targets. So using it is like using <code>std::string</code> except the name:
+
+<source lang="cpp">
+#include "UnicodeString.h"
+
+void myfunc()
+{
+	String first(_T("Hello"));
+	String second(_T(" world!"));
+	String message = first + second;
+}
+</source>
+
+<code>String</code> should be used in non-GUI code instead of MFC CString!
+
+= Translated Application =
+Remember WinMerge is translated to several languages. For translation system to work, every user visible string and resource must be loaded from the resource file. This means strings, menus, dialogs etc.
+
+Never add strings or menu/button labels directly into the code.
+
+See [[Translation System]] for more information.

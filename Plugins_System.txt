@@ -1,0 +1,42 @@
+WinMerge's plugins system allows creating custom plugins that are run before actual compare happens. So plugins can be used to pre-process the compared data. One example of currently implemented plugin is a plugin to extract textual data from MS Word files for WinMerge to compare.
+
+= API =
+Plugins system uses COM API for plugins. Therefore plugins can be implemented in any language supporting COM programming. There are examples of plugins implemented in C++, Delphi and Visual Basic.
+
+= Problems =
+Current plugins system has many problems:
+* no configuration for plugins
+* no GUI (for config)
+* run in the same thread than compare code
+** messagebox shown by plugin stops folder compare while it is shown
+* no usable status returned from plugins
+* plugins can cause bugs that can't be differentiated from bugs in "core" code
+* plugins are not safe
+* no versioning / compatibility info (other than file version numbers that WinMerge ignores)
+* no localization
+
+= Future =
+Current (as of 2.7.8 beta) plugins implementation will be removed in future from 2.9.x. This is due to facts:
+* nobody wants to work with plugins system code
+** it hasn't been fixed / improved for years
+** original developer left the project
+* the code is practically unmaintained
+** still it is involved in every compare done!!
+
+= What about users? =
+'''I (kimmov) really want to remove plugins, just for technical reasons alone.'''
+
+But the fact is, I realized there are users depending on some of our plugins. If we just remove plugins, it means these users can't update WinMerge since they can't anymore do their job.
+
+So I'm afraid we need a decent replacement for plugins first.
+
+= Solutions? =
+Some ideas for solutions, not in any particular order:
+* Just "fix" the API
+** doesn't really solve the problems, but can make them not so visible
+* Expand filtering so that it can modify data too, handle plugin tasks with filters
+** As most plugins are (as far as I know of) just modifying the data
+** syntax? regexps?
+** lines are easy, but more complex data like XML that is not line-based?
+* Implement API for some scripting language
+** requires users to install scripting language too

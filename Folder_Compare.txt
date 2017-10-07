@@ -1,0 +1,91 @@
+Folder compare's main objective is to collect all files in compared folders, possibly inside subfolders also. Usually there is no interest for folder compare to know details about differences.
+
+''Speed is very important for the folder compare.'' There are users who compare thousands of files in one compare. Or users who compare just few very large files. Either way, folder compare just must get the results fast.
+
+=Backend=
+Basic structure of folder compare code is:
+: ''CDirView'' shows the results (queries from ''CDirDoc''). ''CDirView'' also takes care of many of results-related operations like copying items.
+:: ''CDirDoc'' handles the compare result, formats data for the CDirDoc, takes care of many utility functions related to results, and updates the results after operations done by CDirView.
+::: ''CDiffContext'' Contains the results of compare. It also is a kind of proxy for sending compare settings from ''CDirDoc'' to ''DiffThread'' and actual compare routines.
+:::: ''DiffThread'' runs the compare routines in separate thread. It calls several routines in ''DirScan.cpp'' to do the actual compare.
+
+== Phases and Threads ==
+''DiffThread'' and ''DirScan.cpp'' do the compare in two phases:
+# Collect - this phase collects list of items (files and folders) to compare
+# Compare - this phase compares items in the list
+
+These phases were previously ran serialized (first collected all items, then compared them). Current implementation runs both phases at the same time. This is easy to see by running date-based compare for big folders. Found item count increases at the same time than compared items count.
+
+For content compare (diffutils compare and quick compare) time for actual compare is much longer than time to find item. But for date/size -based compare methods compare time is very short, while finding items takes more time. Optimizing both cases is tricky. But two running threads helps as compare phase can always run when there are items to compare. 
+
+Biggest advantage is in compare time for multi-core processors. Single-core processors can run one thread at a time and there the speedup is small. But multi-core processors can run both threads at the same time (mostly). So while other thread finds items from folders, another thread compares them.
+
+If we already have collected items, we can just ''Update'' them in Update-phase. The Update-phase does not find new items to the list. Instead it goes through the list and checks if items still exist (in both sides). If items cannot be found, they are removed from the list. If items are still present, they are re-compared and information is updated. The update can be done to only selected items.
+
+== Classes ==
+Relations of compare-related classes is a clear top-priority problem at the moment. See below about suggested/ongoing architectural rework.
+
+As of 2.7.1.5 experimental, it goes like this:
+: ''CDirDoc'' creates CDiffWrapper for holding (most) compare options.
+: ''CDirDoc'' creates and starts DiffThread as compare-thread.
+:: ''DiffThread'' runs several functions in ''DirScan.cpp'' to run the separate compare phases.
+::: ''DirScan.cpp'' functions create DiffFileData class and call it to run the diff code.
+:::: ''DiffFileData'' uses also DiffWrapper functions to do the compare.
+
+== Walking Folder Tree ==
+Walking folder tree is important and frequently done action in folder compare. It is done when:
+* folders are compared
+* folders are copied/moved
+* patch is created from folders [TODO]
+* folders are browsed (up/down in folder structure)
+
+Current situation is we pretty much have separate code for each case. Which is far from good and ideal situation. For example <code>DirScan.cpp</code> handles comparing case with its own algorithm and structures.
+
+Problems (worst of them):
+* folder copy is not 1:1 for compare - maybe surprises possible?
+* no possibility to apply filters in folder copy (which is a big problem)
+* folders browsing means re-compare instead of just refresh of view
+** yes, it is faster to just walk and compare visible folder's contents, but we could compare non-visible folders in background as low-priority thread. Then we'd have results ready when user browses folders.
+
+=== Plan for Unifying the Code ===
+''This is an initial plan, subject to change a lot.'''
+
+We'll need to generalize walk code and structures in <code>DirScan.cpp</code>. So that we can use them in all cases we'll need folder structure walk.
+
+[continues later...]
+
+== Idea About Better Compare Experience ==
+'''kimmov:''' Currently we do a full folder compare every time, even if user needed to update one or few files (many times files don't change so often..). It is a huge waste of time and resources.
+
+Instead, we could do it like this:
+* retrieve items in the folder (and subfolders)
+* do a full compare for them, recording 'initial' status
+* set up file even listener for compared folder(s)
+* do compare only items for that we receive change notification
+** efficient implementation requires W2K, older Windows don't tell the changed file
+* this should be enough to keep results current for most of the time
+* when really needed, we'll do full-scale sweeps through all items
+* possibly optimization is to first check size/time
+** BUT they don't necessarily change even if the file changes
+** think of possibility to use checksum/hash
+*** even if it takes time, it is still a lot faster than full compare
+* we should also consider caching items from few latest folders
+** memory is cheap
+** instant results when browsing folders back and forth would be great!
+
+== Status update ==
+While folder compare proceeds, WinMerge shows an progress bar and counts of items. So user has some information about how long compare still takes.
+
+For this purpose ''CDirDoc'' has ''CompareStats'' class. Pointer to the class is given to CDiffContext and to ''DirCompProgressDlg''. Whenever compare functions found new item or finish comparing item, they increase counts in ''CompareStats''. ''DirCompProgressDlg'' queries ''CompareStats'' periodically and updates GUI accordingly.
+
+=GUI=
+Folder compare GUI is a customized listview.
+
+==Colors==
+One common feature request is to use different background colors for compare status.
+
+It is a good idea and many people are used to it with other compare/merge programs. But we haven't implemented it in WinMerge because kimmov feels we first need a plan how we use colors in folder compare. We need a solid idea about the colors and how to use them. Remember compare status is not the only important information in the folder compare. There are other info for which we could use colors:
+* newer/older info
+* user-defined statuses or priorities
+* processed/not processed
+* etc

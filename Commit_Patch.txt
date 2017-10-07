@@ -1,0 +1,53 @@
+Commits must be always done with care. Remember every commit and change remains in the repository for everybody to see. Even faulty commits. There is no way to remove data from SourceForge.net subversion service.
+
+And more importantly, faulty commits can cause other people to spend lots of time tracking the fault. They will not be happy for the committer.
+
+== Pre-commit Checks ==
+Before committing any ''code'' to version control, check compiling:
+# Code compiles for all targets (ANSI and Unicode, also X64 for ShellExtension).
+# Code compiles for Visual Studio 2003.Net. That is, don't use VS2005/VS2008 specific extensions/additions.
+#* If you don't have a VS2003 you should ask somebody to verify it for you
+
+After the code passes compilation, you must do at least basic testing that it just doesn't break immediately:
+* Compare some folders
+* Compare couple of files
+* Of course you've already tested the feature you were modifying...
+
+If you are adding / removing files, double-check that:
+* Project files have needed changes
+* All added files are marked to be added to subversion (remember add is separate command and not automatic)
+* All removed files are marked to be removed from subversion
+
+If you are modifying WinMerge.rc, check that:
+* you have updated <code>Src/Languages/English.pot</code> by running script <code>Src/Languages/CreateMasterPotFile.vbs</code>
+
+It is a common mistake to forgot to add some files. And since committer has files, the mistake is very hard to spot. But other people see it once they try to compile.
+
+==Subversion Properties==
+For new text files, make sure to add these properties:
+* <code>svn:eol-style</code> to value: <code>native</code>
+* <code>svn:keywords</code> to value: <code>Author Date Id Revision</code>
+
+<code>eol-style</code> tells Subversion to checkout files using system's EOL style, so the files can be checked out e.g. in Linux. <code>keywords</code> enables Subversion to expand given keywords in textfiles with current information. For example line:
+
+<code>// $Id: $</code>
+
+get replaced in checkout with line like:
+
+<code>// $Id: ChildFrm.h 4183 2007-03-21 19:33:10Z galh $</code>
+
+Subversion stores only keyword into the repository (<code>// $Id: $</code>) and only expands it when checking out sources from repository. So using keywords don't create changed line for every commit.
+
+== Committing ==
+Please do your commits from WinMerge root folder, unless you have a specific reason to not include some folders. This allows you to commit files from all subfolders in one commit. Which is a big advantage for tracking commits later.
+
+There must always be a commit message. Usually commit message is [[Trackers|tracker]] item summary. For example:
+ BUG: [ 1740024 ] "Copy/Move to" confirmation dialog shows wrong "To" path
+
+where first word is tracker name with capitals (BUG, PATCH, TODO or RFE), then item number and summary.
+
+If there is no related tracker item, then commit message must describe the change, what and/or why? For example:
+ Improve comments for SelectFile()
+
+== Editing Changelog ==
+If the commit was important bugfix or new feature, it should be added to [[ChangeLog]].

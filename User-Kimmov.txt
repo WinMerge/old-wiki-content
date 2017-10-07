@@ -1,0 +1,154 @@
+== Contact ==
+I will only discuss about WinMerge '''development''' in IM and e-mail. I '''won't''' give (personal) technical support. Support requests and discussions must go to Sourceforge.net forums or trackers.
+
+<div class="note">
+I will ignore support request sent to me by e-mail. There is no excuse to not sent support requests to Sourceforge.net trackers, mailing lists or forums.
+</div>
+
+'''email''': kimmov [at] winmerge [dot] org
+
+IM: 
+* '''MSN''': raakq [at] hotmail [dot] com (don't send e-mail here, I'm not reading it!)
+* '''Google Talk''': kimmov [at] gmail [dot] com
+
+My blog: [http://kimmov.wordpress.com/ http://kimmov.wordpress.com/]
+
+Personal [http://www.raakku.net/ homepage]
+
+== Role ==
+My role in WinMerge development is a ''lead developer''. So I:
+* decide what kind of product WinMerge is and will be
+* triage bug reports and feature requests
+* try to do a lots of code review (and commit cleanups)
+* review and approve patches
+* manage stable branches (for releases)
+* plan features and releases (as much as we plan them)
+* do the releases
+
+I don't:
+* manage web-pages (Tim does :)
+* create art (icons etc)
+* translate WinMerge (Don't ask me to translate to Finnish..)
+* add new bugs
+
+I'd like somebody else to:
+* take care of the installer
+* improve the manual and other docs (Denis has been working with the Manual)
+* fix the bugs I didn't add
+
+== Tasks ==
+These are tasks I'll be working on, not necessary implementing myself though.
+
+Constantly working on:
+* manual improvements
+* documentation (including this wiki)
+
+Top tasks:
+* '''Bug fixes!'''
+* filtering rework (ideas, planning)
+* <strike>full conversion to PCRE for reqular expressions (editor to-do)</strike>
+* new folder compare ideas
+
+Intermediate tasks:
+* diffutils update - there is a pending work done by ''geek'' and I'll need to go through that
+* XML (+INI) file as options storage
+* folder compare improvements
+* study converting to cross-platform
+
+Long-term tasks:
+* 64-bit builds (status: file compare seems to work, folder compare crashes)
+* for options system : use global defaults
+* project files (compare options?)
+* editor component switch ?
+* patch applying
+
+= Background with WinMerge =
+Since many people keep asking this from me... Interested in how I ended up developing WinMerge? Read the story below.
+
+<div class="note">
+This is just a story, based on my own memory. I left a lot of it out, and have forgot lot too. And it is my own biased point of view.
+</div>
+
+=== I Need a Compare Tool! ===
+In midst of year 2002 I desperately needed a file/folder compare tool. I needed to develop/maintain a component-architecture software which had several versions of each component. It was just a nightmare without a good compare tool. I looked through *many* tools. I had several requirements in mind:
+* it must be free - it might be temporarily used just for couple of months and I didn't have time or energy to negotiate buying new tools for the project.
+* it needed to be fast to compare
+* it must handle lots of files
+* it must be easy to use - especially file compare usability was very important
+
+I tested free tools I could find. None of them really was what I needed. Neither was latest WinMerge release available then. So I initially abandoned using WinMerge.
+
+=== Use The Source! ===
+But I came back, somehow I liked the idea there was. And it was very interesting that I could download the sources and build it myself! It was the heureka moment - I could actually improve my own tools to my own liking. That wasn't possible with most other tools, and it was quite a fresh idea for somebody been working with MS Visual Studio etc.
+
+Second heureka moment was when I noticed I could use CVS to download latest sources, not even released yet. Again something exciting for me. So I could just hunt down and fix bugs that annoyed me most. Oh boy! I was sold.
+
+=== Improving, for My Own Needs ===
+Being in hurry still, in next few months I fixed many bugs and did some improvements that helped in my job. I didn't submit these changes back to the project - indeed I didn't know what to do with them. So I just kept modifying them in my own computer. I had worked with some OSS project before and my experiences were a bit.. mixed. I wasn't really interested in sending my code and patches around this time.
+
+I thought about making a totally new fork of the project, or just dumping my sources to somewhere in the 'net' for people to download. WinMerge project in sf.net looked like a inactive one.
+
+Then at the end of 2002 there started to be happening with WinMerge project in Sf.net. New code was committed to CVS etc. Oh, it was alive! I got interested again, maybe it was easiest after all to try to send my changes to the original project.
+
+=== The First Patch! ===
+January 2003 I finally decided to send my first patch. I spent hours preparing my first patch submission to patch tracker. I chose a change I hoped others would find useful (optimizations always are?) and tried to describe it as well as I ever could (which was not much). It was a patch item {{Patch|665993|#665993 Little Optimization}}. In few days Christian List picked it up and committed to CVS. So I saw good and pretty fast response to my patch. Which was very important to me again - if there hadn't been fast and good response I'd surely wouldn't bother with more patches.
+
+Following days and weeks I kept sending patches by submitting them to patch tracker. Bug fixes and small improvements. Another active developer since then, Perry, also joined in discussions and we worked through many many bugs. Then Christian got bored to just keep committing our patches and added me as project developer so I could commit myself to CVS. Something I never asked for, and was quite a surprised about. I never ever intended to become really involved with the project.
+
+=== I Could Keep Doing This? ===
+But there I was! It was a fresh, different, coding experience, good variance for intense coding at work. So kept doing it. And after all, it helped me doing my work too!
+
+For a long time, Christian worked as a project leader, and most importantly, doing releases. It was always so nice to read positive comments people sent from new beta releases.
+
+=== The Most Important Release ===
+After several months of pretty intensive work, we did a 2.0 stable release. Doing it was really hard. It was kind of endless fight against bugs we didn't want to have in something we release as a stable version. But I think it also was greatest as a release. It was so good it got the ball rolling, lots and lots of more people started using it and found the tool.
+
+=== Growing Pains ===
+I think at the time of 2.0 release we mostly were still doing the tool for ourselves. We got lots of ideas and bug reports from users, but still it felt more like *our* tool we just happen to share for others. I don't think nobody of the development group really understood how different uses people had for WinMerge - as for us it was tool to compare our code.
+
+The message was available in the many bug reports, feature requests and forum posts. It took some time for anybody of development group to realize it. We were too hurry just coding. There were lots of different ways to use WinMerge, way more than we could think of. WinMerge was not just a code compare tool for users.
+
+Being worked with different GUIs for years, I wanted to start improving WinMerge GUI and usability. And allow more use possibilities - more ways to use WinMerge to match what users wanted to do with it. But what and how? We heard from people only when they had problems (bug reports) or when they wanted to something WinMerge didn't allow them to do (feature requests). We didn't know who was using, which kind of people? Developers, system admins,..? We really didn't know what people were doing with WinMerge. It was many times quite a surprise to hear about new ways to use it.
+
+=== The Lead Developer??? ===
+New people joined to the team to help with development. And as always, not everybody shared the same visions and ideas of WinMerge. We had many long discussions in mailing list about what WinMerge is, who use it and for who we develop it.
+
+I wanted to make WinMerge a tool that could be generally useful tool, not just "geek-tool". And got firm opposition. Yes, at that time it wasn't easy to think WinMerge as a tool for everybody. It is always easier to think being in control how users can use the software than to make a software that fits for user's needs. I think that was central point of most of those discussions. Some wanted to control it, I wanted to create new possibilities.
+
+As discussions heated I was already ready to left the project. It felt like waste of time to just keep arguing about those things. However I got some supportive e-mails and had some private discussions that made me think I should continue.
+
+And then, at April 2004, Dean Grimm (the project admin) sent this mail to our development-mailing list: 
+
+<pre>
+From: "Dean Grimm" <dean at accubar.net>
+To: <winmerge-dev at lists.sourceforge.net>
+Message-ID: <KIEIIJKGCOKABPKBHKMGKEBCENAA.dean at accubar.net>
+Subject: [Winmerge-dev] Lead Developer
+Date: Mon, 26 Apr 2004 12:23:23 -0700
+
+WinMerge Devs,
+ Just a quick note to inform you that Christian List and I have elected to
+make Kimmo Varis the Lead Developer on the WinMerge project. Unfortunately,
+there is no "actual" status like that at sourceforge, so this mail will
+serve as notification. I think we all know and respect Kimmo at this point,
+so I don't forsee any issues with this change. Kimmo seems to have a good
+balance between improving the product and keeping it simple/stable which I'm
+sure will help us stay pointed in the right direction. In situations where
+there appears to be conflict, Kimmo will have the authority to moderate the
+dispute and render a decision. This will hopefully help to dissipate some of
+the conflict that we've seen in recent weeks.
+
+As always, thank you all for your hard work and continued support.
+
+Best Regards to all,
+Dean Grimm
+WinMerge Project Manager
+</pre>
+
+So, now *I* had to do all those decisions about WinMerge? Uhh! Of course I was proud of this. I liked the tool, I liked to work improving it. And despite some opinion differences, we still had a good team, doing lots of good improvements.
+
+=== Today ===
+
+Almost four years later, I'm still doing the very same thing with WinMerge. But during the years I've also been doing lots and lots more. Started re-work for the manual, took the job of doing releases etc etc.
+
+'''And It Is Still Fun!'''

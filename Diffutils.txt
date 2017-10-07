@@ -1,0 +1,52 @@
+WinMerge uses modified version of GNU diffutils as its compare engine. Historically this was the only compare engine in WinMerge. Later the [[Quick Compare]] engine was added as an alternative, but the diffutils engine is still the primary engine.
+
+Current implementation is based on old but [[diffutils_version|unknown version]] of diffutils. There are later versions of diffutils available but nobody has yet updated it.
+
+== Changes to original diffutils code ==
+In addition to changes to get diffutils to compile with MSVC and to call its functions from WinMerge, following changes have been done:
+* analyzing moved lines/blocks
+* support for different EOL styles
+* optionally comparing two binary files fully to get correct binary statuses
+
+== Diffutils integration to other code ==
+Diffutils as run from commandline produces ''changescripts'' i.e. patches. When using diffutils code from WinMerge we:
+* map WinMerge compare options to diffutils internal options (done in CDiffWrapper)
+* convert files to UTF-8 encoding if needed (note: buggy, see [http://winmerge.org/bug/1431860 Source bug#1431860])
+* send our filebuffers (containing file data) to diffutils's compare function
+* compare function returns change-list back
+** change-list consists of changes, every change containing one range of linenumbers for different lines
+* we parse this changescript and mark lines in buffers accordingly different or missing
+
+Every compare of the files is unique. There is no state or data stored between the compares.
+* we assume files can be replaced with new files between compares since we don't lock the files
+* as changescripts are linenumber dependent, one change to files may change all scripts
+
+== Future development ==
+Some things we need to do:
+* update code to latest diffutils code
+** structures and variables we use from outside code have been changed
+** must merge our own changes (e.g. EOL styles)
+** Perry: I believe the main difficulty is the autoconf/automake changes (extensive)
+*** I suggest working with a msys/mingw-configured version
+** Kimmov: There is Windows-port available in [http://www.sourceforge.net/projects/gnuwin32 GNUWin32] -project. Maybe we can use that port as a starting point and/or help?
+*** Ok, it appears that GNUWin32 version is compiled with [http://www.cygwin.com/ Cygwin].
+* unit tests
+** there are [[self-tests|selftest]] in the Testing subdirectory, but they require Perl (as they are cross-platform), and current WinMerge no longer passese them all successfully.
+** cunit based tests would be my preferences (''Kimmov'')
+* study if we could store some results/data between compares
+** this does '''not''' mean Perry's suggestion using database for compare results. It is plain unreliable to see only if file dates or sizes change. Timestamps are not reliable in many cases. File contents can change even if size does not change.
+
+= DiffUtils Update =
+Sooner or later we need to update diffutils to latest 2.8.x version. That is basically the only way to get real 3-way merge for example.
+
+'''This is a hard task!'''
+
+Things making this hard:
+* diffutils 2.7.x and 2.8.x codebases are very much different. There is no way to make a simple merge.
+* we have some WinMerge specific changes in diffutils code (e.g. support for moved blocks)
+* testing diffutils code is hard
+* update for sure causes behavior changes in the code (it is different code after all)
+* so we'll need to adapt wrapper code for those changes, once we recognize them
+* we have no good test material
+
+When we do this update, we for sure break compare for users testing WinMerge. This can mean lot less people testing it when we most need it!

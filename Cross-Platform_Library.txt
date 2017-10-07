@@ -1,0 +1,93 @@
+We need to choose a library we use as our base for future cross-platform work.
+
+There are two strong libraries available:
+* [http://www.boost.org/ Boost]
+* [http://apr.apache.org/ Apache APR]
+
+[http://synesis.com.au/software/stlsoft/ STLSoft] is lesser known portable library.
+
+Note that [http://www.wxwidgets.org/ wxWidgets] or [http://trolltech.com/products/qt/ Qt] are not listed. And won't be listed. They are frameworks that try to do it all, especially the GUI. One important thing for WinMerge is to divide GUI and backend. So that backend code can be used with other than those two libraries. So using more general library is what WinMerge needs.
+
+Most important things we look for cross-platform library are:
+* filesystem interaction (fast search/enumeration is important for us)
+* threads
+* thread synchronization
+* sockets (not currently but we can't avoid in future)
+* XML (expat + SCEW is far from optimal, real DOM support would be nice..) 
+* smart pointers
+
+= Boost =
+Boost is easiest to install with installer available from [http://www.boostpro.com/products/free http://www.boostpro.com/products/free].
+
+Boost is a set of C++ libraries. Some libraries are header-only (no <code>.lib</code> or <code>.dll</code> to link to. And some are dll files. Being C++ many libraries also have [http://en.wikipedia.org/wiki/Standard_Template_Library STL] -like approach and provide iterators etc.
+
+Some of the Boost libraries are implementation of the [http://en.wikipedia.org/wiki/Technical_Report_1 TR1] or proposed additions for next C++ standard.
+
+= APR =
+APR needs to be compiled from sources. Compiling [http://apr.apache.org/compiling_win32.html instructions] for Win32.
+
+APR is one library (having several subcomponents) programmed with C. It was developed for Apache HTTP server but is nowadays used by other projects too (namely subversion). Due to the Apache Org lisence, it can be used with GPL program only as a library.
+
+= STLSoft =
+STLSoft is header-only library for C++. It mainly extends STL.
+
+Main concern with STLSoft is its poor documentation. Another is its varying support for cross-platform - some parts are some are not.
+
+"Good parts" (documented, cross-platform) of STLSoft look great however.
+
+= Comparison =
+{| class="wikitable"
+|-
+! Wanted Feature
+! APR
+! Boost
+! STLSoft
+|-
+| filesystem interaction
+| [http://apr.apache.org/docs/apr/1.3/group__apr__dir.html doc]
+| [http://www.boost.org/doc/libs/1_35_0/libs/filesystem/doc/index.htm doc]
+| 
+|-
+| threads and synchronization
+| [http://apr.apache.org/docs/apr/1.3/group__apr__thread__proc.html doc] [http://apr.apache.org/docs/apr/1.3/group__apr__os__thread.html doc] [http://apr.apache.org/docs/apr/1.3/group__apr__proc__mutex.html doc] [http://apr.apache.org/docs/apr/1.3/group__apr__thread__mutex.html doc]
+| [http://www.boost.org/doc/libs/1_35_0/doc/html/thread.html  doc]
+| 
+|-
+| sockets 
+| [http://apr.apache.org/docs/apr/1.3/group__apr__network__io.html  doc]
+| [http://www.boost.org/doc/libs/1_35_0/doc/html/boost_asio.html  doc]
+| 
+|-
+| XML
+| [http://apr.apache.org/docs/apr-util/1.3/group___a_p_r___util___x_m_l.html  doc in apr util]
+| No support
+| 
+|-
+| smart pointers
+| No support
+| [http://www.boost.org/doc/libs/1_35_0/libs/smart_ptr/smart_ptr.htm doc?]
+| 
+|}
+
+{| class="wikitable"
+|-
+! 
+! APR
+! Boost
+! STLSoft
+|-
+! Pros
+|
+* Widely used and tested in OSS
+* Can be used easily from C code (diffutils)
+|
+* Lot of libraries in Boost are forward-compatible with the next versions of the STL (TR1 and next C++ standard) 
+|
+|-
+! Cons
+|
+* Need to pass pool structures everywhere
+|
+* Compilation and installation can be a pain because of different compilers/linkers
+|
+|}

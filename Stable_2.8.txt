@@ -1,0 +1,93 @@
+<div class="note">
+Stable 2.8.4 was released 2008-06-17.
+</div>
+
+The fact is, release happens when people doing the release have time for it. Best way to ensure we get releases done sooner is to help us fixing bugs and testing. See [[Help Needed|how you can help]].
+
+= Old Plans =
+Original plan was to release 2.8 pretty fast after 2.6.0 (say few months) because MS Vista just got released and we expected there could be some problems. So we basically were ready for a "quick" fix. Fortunately there were no big problems.
+
+Then the plan was to release in autumn of 2007. That however quickly became unrealistic as some key persons got very busy. There wasn't nobody to make a release at that time. And we basically had no any release plans at all.
+
+Things changed in late 2007 and development got faster and need for new stable release got more apparent. 2.7.x development versions simply were so much better than 2.6.x versions that we need to release 2.8 for users.
+
+= Timetable =
+As with earlier stable releases, basic idea is to have one beta or RC release as freeze point, after which we don't change translated texts and only add bug fixes and minor feature improvements. Freeze allows translators to have some time to update translations before the stable release.
+
+Previous experience with stable releases has shown that about one month is good time between freeze and actual release. Many bugs get fixed during that period and most active translators have time to update translations.
+
+== Past Beta Releases ==
+* 2.7.2 beta release in end of February (''original was begin of Feb but didn't have time for that..'')
+* 2.7.4 beta release in June
+* 2.7.6 beta release in end of November (original idea was August or September)
+
+2.7.6 beta was originally though as a be a GUI freeze release, and also feature freeze. However at release time it was clear we still need some GUI work and we didn't freeze. We however stated that 2.7.6 is the last beta-level release before 2.8 stable release.
+
+== 2.8 Release Candidate ==
+2.8 RC was released 2008-03-04, with version number 2.7.8. It was delayed from original plans due to some late changes happening. And these changes really were worth of the wait.
+
+This RC release means:
+* creation of 2.8 stable branch
+* GUI string freeze
+
+== Stable Release ==
+2.8.0 stable release was released 2008-04-03.
+
+After the 2.8.0 release, stable release bug fixing happens in 2.8 branch.
+
+= Important Changes =
+This shortly lists items already done for 2.8 and things needing to be done before the release can happen.
+
+== Already Done for 2.8 ==
+There are remarkable internal changes already done in 2.7.x development code:
+* regular expressions use (not everywhere yet) PCRE engine
+* expat + SCEW is used for XML
+* line filters are now post-compare, using PCRE instead of diffutils internal regexp engine
+* match lines inside differences (tries to match similar lines)
+* location pane refactor (+ fixes for word-wrap)
+* compare code moved out of DiffFileData
+* two threads in folder compare (first thread collects items, second compares items)
+* line filter GUI improvement
+* copy operation (folder compare) confirmation dialog
+* printing improvements
+* <strike>bugfixes for in-line difference highlight</strike> (backed out due to regressions)
+* shell extension enabled for folder backgounds
+* selection of syntax highlight type
+* '''new PO-file based translation system'''
+* '''opens binary files to file compare''' (escapes non-printable byte values)
+* tabs for compare windows
+* zoom in editor
+* codepage select in editor
+* resolving conflict files
+* detecting UTF-8 files without BOM
+* fix for potential folder compare lockup
+* Help-menu cleanup
+* set proper name/publisher info for shell extension rc file
+
+== Needs to be done for 2.8 ==
+* update manual
+** version numbers
+** new features
+*** opening binary files
+*** conflict file resolving
+*** editor zoom
+** new options
+** new screenshots
+* update release notes
+* important bugs:
+** '''WinMerge shutdown problem''' (worked around in 2.6.4 and later 2.6.x)
+
+= 2.8.2 =
+This will be a bugfix release, in end of the May or begin of the June. Also several translation updates will be included.
+
+== Todo ==
+* Update release notes
+
+Patches to merge from trunk:
+* <strike>BugFix: Version Control filter did not match all VSS files (#1881186)</strike>
+* BugFix: Fix showing differences in the end of the line (#1883409, #1962816)
+* <strike>BugFix: Fix command line paths in quotes ending with "\" (#1963523)</strike>
+* <strike>New translation: Greek (#1968429)</strike>
+* <strike>BugFix: Command line  description text starting with "/" confused WinMerge (#1973225)</strike>
+* ''BugFix: Location Pane flickers when resizing (#1740106)'' (Not applying this?)
+* <strike>'''WinMerge shutdown problem patch from bug item {{Bug|1602313|#1602313}} WinMerge stays in tasklist after closing'''</strike>

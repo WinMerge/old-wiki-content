@@ -1,0 +1,37 @@
+Our user documentation consists of:
+* [[Manual]]
+* Readme
+* [[ChangeLog]]
+* Release notes
+* Contributors list
+
+= Readme =
+Readme is a traditional file describing WinMerge shortly. It tells what WinMerge is, what license it has, and where user can get more help.
+
+The Readme is a translated document, which has already been translated to several languages. English file is in <code>/Docs/Users/ReadMe.txt</code> and translations are in folder <code>/Docs/Users/Translations/</code>. The installer adds correct translated version into the Start-menu.
+
+Readme is shown by the installer at the end of installing. And it is also available from Start-menu.
+
+= Changelog =
+Changelog lists remarkable (often: user-visible) changes in each release.
+
+Changelog is linked from Release notes. It is also available from web site.
+
+= Release notes =
+Release notes is another traditional document. It describes the release, listing and describing important new features. New translations and translations updates are also listed. If there are important and visible bug fixes (like was the case with UTF-8 files without BOM bytes) then those should be listed.
+
+Release notes also have a list of known issues in the release.
+
+Release notes is available from WinMerge's Help-menu. And in web site.
+
+= Contributors list =
+Contributors list lists people in WinMerge development group (some of who are inactive nowadays). Then it lists translators for each translation and other people who have been contributing (in form or another) to WinMerge.
+
+Contributors list is available from WinMerge's About-dialog. Note that core developers are listed also in the Splash screen.
+
+= Images =
+Prefer PNG formatted images unless you have a good reason for some other format. You should also run some PNG optimization program, at least for bigger images. One optimization program is [http://pmt.sourceforge.net/pngcrush/ Pngcrush].
+
+= Todo =
+* Add contributors list to Help-menu for more obvious access
+* Add Release notes to Start-menu for easier/faster access

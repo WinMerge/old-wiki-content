@@ -1,0 +1,9 @@
+So far we haven't used unit tests or any kind of other automated tests. We've mostly verified functionality with debugger and everybody's own sets of test files (there's lots of files attached to tracker items).
+
+There are also Perry's [[Self-tests]] but they run WinMerge executable and as such work in wrong level. Of course they can be used until we have proper unit testing for compare code.
+
+However, [[Unit Testing | unit testing]] is the way to go in future.
+
+As automatic unit tests can be used only for certain parts (non-GUI code), we need to figure out ways to test GUI parts also. Merging various formats of differences come to mind...
+
+It would be very interesting to collect set of files (and folders) we can use for testing. Now every developer has their own set of files. Then we need to describe what is expected to happen with these files.

@@ -1,0 +1,90 @@
+Regular expressions are one key feature in WinMerge filtering. But they can be also used in editor for searches.
+
+== PCRE ==
+[http://www.pcre.org/ PCRE] Regular Expression implementation is in WinMerge source tree in <code>/Externals/pcre/</code>. All regular expression code must use PCRE.
+
+One of advantages of PCRE is it supports UTF-8 natively. So for example in line filters we avoid converting data between different unicode formats.
+
+Read PCRE [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Externals/pcre/doc/pcre.txt documentation] from source repository.
+
+== Usage Areas ==
+=== [[Filtering]] ===
+Filtering is based on regular expressions:
+* file filtering uses regular expression rules to include/exclude items in compare
+* line filtering uses regular expressions to exclude differences in files
+
+Note that even if *.ext -style filter is given from Open-dialog, it is still converted to regular expression before the compare.
+
+''Filtering will be almost completely rewritten.''
+
+=== Search / Replace ===
+Editor allows using regular expressions in Find/Replace dialogs.
+
+== Using PCRE ==
+
+=== Unicode ===
+As WinMerge handles Unicode data, PCRE needs to handle it too. PCRE handles UTF-8 Unicode. So all unicode data (expressions and strings to match) must be given as UTF-8.
+
+There are utility functions in ''Ucs2Utf8.h'' for conversions needed.
+
+=== Circumventing EOL Chars Issue ===
+In WinMerge files can have different EOL characters, sometimes EOL characters can vary even inside one file. PCRE can handle different EOL chars but EOL char type must be told to it. This is not always practical.
+
+Experimental release 2.7.1.5 and later have new ''post-compare line filtering'' implemented. This new line filtering code first normally compares files and emits results to the difference list. Then lines in differences are matched against regular expressions given. If all lines in both sides match the expression, difference is marked as ignored. As linedata is got from WinMerge's own buffers there is no EOL bytes so the compare is EOL style independent.
+
+Now we finally have fixed linefilters to work with different EOL styles and ''$'' in regular expression matches the line end.
+
+=== PCRE Structures ===
+Be aware that PCRE structures like <code>pcre</code> and <code>pcre_extra</code> are complex structures with pointers. Don't try to copy them as simple structs.
+
+== In the Code ==
+Start by including <code>pcre.h</code> and <code>Ucs2Utf8.h</code>
+
+<source lang="cpp">
+#include "pcre.h"
+#include "Ucs2Utf8.h"
+</source>
+
+Add PCRE structures and related variables:
+<source lang="cpp">
+const char * errormsg = NULL;
+int erroroffset = 0;
+char regexString[200] = {0};
+int regexLen = 0;
+int pcre_opts = 0;
+</source>
+
+Set regular expression string to <code>regexString</code> and length to <code>regexLen</code>. For unicode build, set PCRE options to use UTF8:
+<source lang="cpp">
+#ifdef UNICODE
+      pcre_opts |= PCRE_UTF8;
+#endif
+</source>
+
+Set other PCRE options if needed: <code>PCRE_BSR_ANYCRLF</code> (''Do we need this with pcre 7.7??'') and <code>PCRE_CASELESS</code>.
+
+Compile and study regular expression:
+<source lang="cpp">
+pcre *regexp = pcre_compile(regexString, pcre_opts, &errormsg,
+    &erroroffset, NULL);
+pcre_extra *pe = NULL;
+if (regexp)
+{
+      errormsg = NULL;
+      pe = pcre_study(regexp, 0, &errormsg);
+}
+</source>
+
+Add variables for result table:
+<source lang="cpp">
+int ovector[30];
+char compString[200] = {0};
+</source>
+
+Execute regexp:
+<source lang="cpp">
+int result = pcre_exec(regexp, pe, compString, stringLen,
+          0, 0, ovector, 30);
+</source>
+
+If the <code>result</code> value is >= 0 then we got a match. <code>ovector</code> contains matches as pairs of start- and end-positions.

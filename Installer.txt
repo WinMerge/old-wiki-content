@@ -1,0 +1,43 @@
+Documentation how to compile installer and where to put files etc is availeble in SVN:
+[http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/readme-InnoSetup.html readme-InnoSetup.html].
+
+=Installer Tasks=
+The installer does a lot more than just copying files into WinMerge program folder:
+* adds project file icon and associates it with <code>.winmerge</code> files
+* sets notepad as project file editor
+* adds WinMerge as ClearCase, TortoiseCVS or TortoiseSVN compare tool
+* enables shell integration
+* removes archive support files when uninstalling
+
+== Libraries ==
+WinMerge uses two external libraries:
+* expat
+* PCRE
+
+We compile and distribute dll:s of these libraries with WinMerge. The installer copies library dll files to WinMerge folder
+
+==Runtime Files==
+Several runtime files, C-library, MFC-library etc are in folder <code>Installer\Runtimes\</code>. We use Visual Studio 2003.Net versions of those runtime files. They don't come with Windows versions (at least not in XP and earlier) and must be installed for WinMerge to work.
+
+= Logging =
+Installer can create a log from install process. This can help in solving installation problems.
+
+To create a log, start installer from the command line, and give argument like:
+
+ /LOG=C:\WinMerge_install.log
+
+For example with WinMerge 2.8.0 installer:
+
+ WinMerge-2.8.0-Setup.exe /LOG=C:\WinMerge_install.log
+
+=Todo=
+Some ideas to improve installer:
+* prompt if user wants to remove WinMerge settings from registry when uninstalling
+* download (and install) archive integration
+* '''create MSI installer'''
+* create installer capable running without administrator priviledges (possible? what limitations there would be?)
+* allow to only uninstall part of WinMerge - e.g. uninstall just plugins?
+
+= Links =
+Some Inno Setup related links:
+[http://www.vincenzo.net/isxkb/ Inno Setup Extensions Knowledge Base]

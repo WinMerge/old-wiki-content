@@ -1,0 +1,39 @@
+WinMerge is developed by several people in their spare time.
+
+= Developers Listed =
+WinMerge (currently) has couple of active people developing it. In the past there were more people involved.
+
+== Active Developers ==
+These people are currently active in the WinMerge project.
+*[mailto:list1974%20at%20hotmail%20dot%20com Christian List] - Project Administrator
+*[mailto:grimmdp%20at%20yahoo%20dot%20com Dean Grimm] - Project Administrator
+*[mailto:galh%20at%20users.sourceforge.net Gal Hammer]
+*[mailto:jtuc%20at%20users.sourceforge.net Jochen Tucht] - Archive Support
+*[mailto:kimmov%20at%20winmerge.org Kimmo Varis] - Lead Developer
+*[mailto:neonapple%20at%20users%20dot%20sourceforge%20dot%20net Alexander Skinner] - Graphic Designer
+*[mailto:sdottaka%20at%20users.sourceforge.net Takashi Sawanaka]
+*[mailto:tim%20at%20gerundt%20dot%20de Tim Gerundt] - Web Developer
+*[mailto:marcelgosselin%20at%20users%20dot%20sourceforge%20dot%20net Marcel Gosselin]
+*[mailto:denisbradford%20at%20users%20dot%20sourceforge%20dot%20net Denis Bradford] - User Manual
+
+== Inactive/past Developers ==
+These people have been involved with the WinMerge in the past, but have since left the group or are busy with other activities. Do not contact these people about WinMerge unless you have good reasons (usually you don't have).
+*[mailto:cmumford%20at%20users.sourceforge.net Chris Mumford]
+*[mailto:seier%20at%20users.sourceforge.net Christian Blackburn] - Installer Developer
+*[mailto:dlkj%20at%20users.sourceforge.net Dennis Lim]
+*[mailto:ccganier%20at%20club-internet%20dot%20fr Laurent Ganier]
+*[mailto:elsapo%20at%20users.sourceforge.net Perry Rapp]
+
+== Translators ==
+Current and past translators are listed in [[Translations|translations]].
+
+= Contacting Developers =
+
+The best way to contact developers is to use one of our [http://winmerge.org/support/mailing-lists.php mailing lists] or [http://apps.sourceforge.net/phpbb/winmerge/ forums] for that.
+
+<div class="note">'''DO NOT''' send support requests to developers by e-mail! There are [http://winmerge.org/support/mailing-lists.php mailing lists], [http://apps.sourceforge.net/phpbb/winmerge/ forums] and item trackers for that. Using those facilities means other people can answer your questions also. 
+</div>
+
+= Want to Develop or Translate WinMerge? =
+
+Look here for more information on how to [[Help Needed|develop]] and/or [[Translations|translate]] WinMerge.

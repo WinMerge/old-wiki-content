@@ -1,0 +1,78 @@
+[http://logging.apache.org/log4cxx/ Log4cxx] is [http://apache.org/ Apache] logging library for C/C++.
+
+= Installing =
+Building log4cxx requires some manual work.
+
+Prerequisites:
+* Apache [[Ant]] installed with C/C++ task
+
+Download Apr sources and unzip/copy them so that <code>apr</code> and <code>apr-util</code> are in the same folder. You don't need <code>apr-iconv</code> for log4cxx.
+
+Download log4cxx sources from [http://logging.apache.org/log4cxx/ http://logging.apache.org/log4cxx/] or from Apache Subversion repository.
+
+Your folder structure must look like this:
+
+ Your folder (e.g. C:/Code/)
+   apache-log4cxx
+   apr
+   apr-util
+
+Configure sources:
+* open Command Prompt, setup [[Ant]] environment
+* go to log4cxx sources folder
+* run <code>configure.bat</code> batch file
+* edit file <code>apr-util/include/apu.hw</code>
+** find line beginning <code>#define APU_HAVE_APR_ICONV</code>
+** make sure the line ends with <code>0</code>
+* edit file <code>apr-util/include/apr_ldap.hw</code>
+** find line beginning with <code>#define APR_HAS_LDAP</code>
+** make sure the line ends with <code>0</code>
+
+== Visual Studio IDE Build ==
+Create VS project files:
+* run command <code>ant build-projects-vc7</code> (or -vc8/-vc9 if using VS2005/2008)
+
+Open the project file <code>target/log4cxx.vcproj</code> to Visual Studio and compile it.
+
+== Ant Build ==
+IDE build didn't work for me.. Ant build worked after I disabled ODBC:
+* edit file <code>apr-util/include/apu.hw</code>
+* find line beginning with <code>APU_HAVE_ODBC</code>
+* make sure the line ends with <code>0</code>
+
+Run the build with Ant:
+* setup VS environment for command prompt
+** run <code>[VS installation folder]/Vc7/Bin/vcvars32.bat</code> batch file
+* run ant:
+** <code>ant -Dwith-apr=../apr -Dwith-apr-util=../apr-util</code>
+
+= Adding to VS Project =
+Adding log4cxx to the Visual Studio project is pretty simple:
+* add <code>apache-log4cxx/src/main/include</code> as include path for VS. Or you can add it as relative include path to project settings.
+* add compiled <code>log4cxx.lib</code> as import library into project
+* copy manually <code>log4cxx.dll</code> to build folder or add to <code>postbuild.bat</code> a command to copy it
+
+= Config File =
+Configuring can be a bit tricky. Maybe the easiest way is to create a configuration xml file. Look at example config file in [http://www.dreamcubes.com/blog/index.php?itemid=59 this blog]
+
+Remember to comment out unnecessary appenders.
+
+You need to initialize logger (from config file) in one file. Add include file:
+ #include <log4cxx\xml\domconfigurator.h>
+to one file and add this call to proper place:
+ DOMConfigurator::configure("MyLogConfig.xml");
+
+= Writing to the Log =
+
+First add the include:
+ #include <log4cxx\logger.h>
+
+To use static logger instance, create it:
+ LoggerPtr loggerToFile(Logger::getLogger( _T("MyLogger") ) );
+
+To write to a log file:
+ LOG4CXX_TRACE(loggerToFile, _T("Enter CMergeApp::InitInstance()"));
+
+There are many <code>LOG4CXX_*</code> macros for different messages.
+
+See more info from log4cxx [http://logging.apache.org/log4cxx/index.html help].

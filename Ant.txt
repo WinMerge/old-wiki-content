@@ -1,0 +1,32 @@
+[http://www.apache.org/ Apache] [http://ant.apache.org/ Ant] is a build tool for Java programs. It can be used for C/C++ building with additional tasks.
+
+Prerequisites:
+* Java version 1.4.2 or later
+
+= Installing =
+Installing Ant + C/C++ tasks requires some manual work. Follow the instructions below.
+
+== Ant ==
+Download Ant binary distribution from [http://ant.apache.org/ http://ant.apache.org/]. Unzip it to own folder (e.g. <code>C:/Tools/ant/</code>.
+
+Create a batch file to setup Java + Ant environment:
+ set ANT_HOME=C:\Tools\apache-ant-1.7.1
+ set JAVA_HOME=C:/Program Files/Java/jdk1.6.0_06/
+ set PATH=%PATH%;%ANT_HOME%\bin
+
+where <code>ANT_HOME</code> is your Ant installation folder and <code>JAVA_HOME</code> is Java installation folder.
+
+To run Ant files, open Command Prompt and run this batch file first.
+
+== Ant C/C++ task ==
+Download "cc compilation task" source distribution from [http://ant-contrib.sourceforge.net/ http://ant-contrib.sourceforge.net/]. Note that it is separate distribution from ant-contrib files.
+
+Unzip the sources to some proper folder (e.g. <code>C:/Code/Ant-cc-task/</code>).
+
+To build cc-task:
+* open Command Prompt
+* run the Ant setup batch file (created above when installing Ant)
+* CD to cc-task source folder
+* type command: <code>ant</code> (That's right, just <code>ant</code>, it'll runs the (build) script from current folder)
+
+Copy generated <code>cpptasks.jar</code> file from <code>/target/lib/</code> subfolder to Ant's <code>lib/</code> subfolder.

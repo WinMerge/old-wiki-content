@@ -1,0 +1,95 @@
+'''WinMerge development model is changing!'''
+
+= Old (pre 2.9.x) Model =
+Our current mode is pretty traditional:
+* develop in trunk
+* create a stable branch for stable releases once trunk has been developing "enough"
+** in practice this has been about one year in time
+
+== Problems ==
+There are several problems in our current model:
+* our development cycle (from x.x.0 stable to next x.x.0 release) is long (year or more). This means users have to wait over year to get new features they may desperately need in their work
+* trunk and branch diverge pretty fast, merging fixes to branch isn't easy, and totally different fix may be needed in trunk and branch
+* nobody is really testing the branch after the x.x.0 release, and we don't create test releases from branch
+* if somebody submits a new big/risky feature in near next stable release, we must keep the patch waiting (for a long time) as we cannot risk next stable release stability
+
+''It may take over an year we can fix problems users have.''
+
+= Current (New) Model =
+The new model doesn't (of course!) solve all the problems, but at least it makes many of them a lot smaller problems. The basic idea is:
+* ''trunk'' is for fast and free development of new fixes and features
+* we develop in trunk until the feature / fix is in good shape
+* ''development branch'' is for collecting patches and features from trunk to next stable version
+* development branch should always work (release any time)
+* once time is good (and branch status is good) stable release is created from development branch and it morphs into ''stable branch''
+* stable branch is only two or three releases
+* when stable release is released, new development branch is created for next stable series
+
+This changes our releases significantly:
+* pretty short time (few months) between stable release series
+* new features are always available in few months, not just minor bug fixes
+* we have always good quality code available in development branch
+* development is easier as code can be faster committed to trunk and not just submitted to trackers
+
+== The Trunk ==
+The trunk is where actual development happens. Every patch gets first committed to trunk. Sometimes there can be branch-only fixes but they are rare.
+
+Trunk development is meant to be fast and liberal, so that there is very low barrier for committing new code. Only real requirement is that code must compile. Earlier we preferred committing new features in single large commits, but in this new model large commits should be logically divided into smaller ones, if possible.
+* It is important to separate cleanups from functional changes. Functional changes may get into development branch, cleanups do not (unless other patches depend on them).
+
+=== Experimental Releases ===
+Experimental releases are a bit of question mark at the moment. Current thinking is they should be released from the development branch as they are used quite a many people.
+
+On the other hand, development branch doesn't need so much testing, and trunk development is certainly a lot more interesting to follow. So perhaps experimental releases should happen from the trunk. This would help making features tested and ready for development branch.
+
+== Branches ==
+The trunk is where the main development happens. But we always have a ''development'' branch which heads to next stable release. A new development branch is created when stable release is done from earlier development branch.
+
+In practice we have two branchces in addition to the trunk:
+* development branch heading to next stable release
+* stable release branch which gets fixes for stable bug fix release
+
+[[image:branches.png]]
+
+=== Development Branch ===
+The development branch is practically a ''next stable release anytime'' -kind of branch. It must work. Problematic patches are reverted, instead of fixed in the branch.
+
+When a fix/feature has matured in the trunk, it needs first to be reviewed and approved for development branch. The review:
+* determines if it is ready for the branch
+* if the feature/fix is at all wanted for the branch (maybe the feature just don't fit to next release)
+
+This has few implications
+* nothing gets automatically included in the release, it always needs go through review, and always need some work
+* patches that are only thrown to us, not maintained or worked on, are not likely to reach development branch
+* development branch don't get anything risky, possible breakages should be easy to handle
+* few months of branching time doesn't allow code to diverge too much between branch and trunk (as it diverges in one year) so merging should be easier
+
+==== Beta Releases ====
+Beta releases are done from development branch. Considering development branch lives few months, there can be one or two beta releases from it. One in middle of development cycle. And another when the stable release is near.
+
+=== Stable Branch ===
+Once we create first stable release from the development branch it changes to stable branch. Stable branch is only for bug fixes for next minor stable release in the same series. All new features go into the next development branch.
+
+Stable branch lives only for two or three stable releases. After that we should already have a next stable release ready. So amount of work in maintaining a stable branch is greatly reduced.
+
+== Creating a New Development Branch ==
+when the new development branch is created from the trunk, it basically is a trunk in certain moment. So it is not immediately as stable and good as it should be.
+
+As mentioned elsewhere, we don't want automatic inclusion of features or fixes. Blind creation of development branch from trunk would mean just that - everything that is in trunk gets included into next stable release. No way.
+
+Instead features and fixes will be reviewed and selected as when elevating from trunk to branch. Hopefully most features and fixes are already tested and reviewed in the trunk, so this is not a big effort. Features and fixes that are not ready for development branch will be reverted from it.
+
+= The Usual Work Flow =
+How this all works in practice:
+# (Optionally) Submit a patch to our patch tracker
+## Respond to review comments
+# Commit the patch to trunk (or ask somebody else to commit)
+# Submit / commit additional patches
+# Repeat this until the feature / fix is "ready"
+# Ask (if nobody has commented about it yet) if it is good for development branch
+## If the patch gets approved for development branch, commit it (or ask somebody else to commit) to development branch
+##* keep eye on bug tracker for possible reported new related bug reports or regressions
+##** if there is no trivial and fast fix, the patch is reverted from development branch
+##** breakages with trivial fixes can be fixed to the branch (remember to include the fix to trunk also!)
+## If the patch does not get approval, think if it could be improved further
+##* Even if the patch doesn't get approval for current development branch, you now have couple of months to fix / improve it and it likely gets automatically included when next development branch is created.

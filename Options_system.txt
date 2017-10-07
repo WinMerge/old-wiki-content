@@ -1,0 +1,62 @@
+There is documentation in Subversion folder Docs/Developers/ in file [http://winmerge.svn.sourceforge.net/viewvc/*checkout*/winmerge/trunk/Docs/Developers/Options.html Options.html].
+
+Options-system provides a uniform way for WinMerge code to access option values. Although options are currently stored into registry, it would be pretty easy to implement INI- or XML file support.
+
+<div class="warning">
+'''Do not add new options without using OptionsMgr.''' We really need to track what options we have and what options we use where. Although the OptionsMgr isn't the nicest class to use, using it ensures we know our options and their usage.
+</div>
+
+
+== Problem of HKCU ==
+One big problem with Options-system (and in some degree with other parts of code) is that we always use HKCU (''HKEY_CURRENT_USER'') when reading/storing values to registry. This means all our options-handling is per-user.
+
+Normally this is not a problem if there is only one user for the computer, and the user always uses the WinMerge with the same user account. But problems arise when:
+* user uses Administrator account to install the WinMerge and other account ot use WinMerge
+* user uses several accounts
+
+The installer sets the initial values for only the current account (which must have administrative privileges). So other user's options aren't initialized properly.
+
+Sf.net tracker item is [http://winmerge.org/todo/1460517 Todo #1460517].
+
+=== Solution idea(s) ===
+One proposed solution is to use HKLM (''HKEY_LOCAL_MACHINE'') to store the initial values. Then when user changes some value, changed value is stored to user's HKCU. This allows all users to have the same initial values, but every user can customize WinMerge for their liking.
+
+Second possible solution would be to use ''All User's'' account for initial and common settings. That requires administrative privileges. This solution isn't practical for short term.
+
+''TODO: add links to relevant bug/todo/rfe items''
+
+=== The Plan ===
+I'll (kimmov) implement the first solution idea presented above.
+
+==== Installer ====
+Installer writes all values into HKLM. This requires administrative privileges. But installer requires them anyway. So it is not a problem. Some values may have to be written for every user, but I don't know about them yet. I'd rather not do that in the installer, but in WinMerge first startup.
+
+We'll probably need a new option value indicating if it is a first startup after installer is run. And if it is first startup, then to reset/copy option values.
+
+If the installer is not used, then there are no any values copied. WinMerge initializes values at startup to HKCU.
+
+Installer must use <code>{common*}</code> values instead of <code>{user*}</code> values. <code>{common*}</code> refers to ''All Users'' while <code>{user*}</code> refer to currently logged in user. This is biggest change in the installer script.
+
+==== WinMerge Exe ====
+The WinMerge executable checks in startup if the ''first run'' option is set. If it is set, it copies new option values from HKLM to HKCU. Existing values aren't altered unless they need to reset for some compatibility reason. But this should be avoided as much as possible since users don't like losing their settings!
+
+If the installer is not used, then the ''first run'' option does not get set and no option values are copied.
+
+== Future development ideas ==
+List of possible future development/improvement ideas:
+* store options to XML file. This allows e.g. easily to move options between computers and/or users. And backup them.
+* read option defaults from external xml file. Allows user/admin customization of them among other advantages.
+* allow per-compare options. This is needed e.g. for loading compare options from project file
+** compares need own COptionsMgr instance, which clones options from global instance and/or loads them from elsewhere.
+
+= XML / INI File Options Storage =
+== Use Cases ==
+There are several use cases where file-based storage is needed:
+=== Import/Export ===
+Users want to backup their settings. Although WinMerge doesn't have "too many" settings, it still is easier to import favorite settings than set them one by one. Second obvious case is copying settings between computers/users.
+
+=== Portable WinMerge ===
+Some users keep WinMerge in their USB stick. And they want WinMerge to read settings from the file in stick instead of computer the stick is attached.
+
+=== Cross-Platform ===
+Supporting [[CrossPlatform]] requires to have other way than Windows registry to store settings.

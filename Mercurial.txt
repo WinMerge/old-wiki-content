@@ -1,0 +1,40 @@
+[http://www.selenic.com/mercurial/ Mercurial] is a great distributed version control system (DVCS). It is pretty easy to use it with WinMerge development.
+
+Some advantages with using Mercurial:
+* you have locally all repository data
+* repository operations are really fast (compared to Subversion in Sf.net)
+* you can do local commits while you work
+** you have "local" version control for your own use
+** commit your work, revert when needed, without affecting other developers at all
+
+= Installing =
+You need to install Mercurial and tool called ''hgsvn'' for importing Subversion data.
+
+''hgsvn'' requires Python 2.5.x installed.
+
+== Mercurial ==
+Download the installer from [http://mercurial.berkwood.com/ http://mercurial.berkwood.com/]. Then just run the installer.
+
+== hgsvn ==
+Unfortunately automatic tools don't work with Windows. You need to download:
+* setuptools from [http://pypi.python.org/packages/2.5/s/setuptools/ http://pypi.python.org/packages/2.5/s/setuptools/]
+* hgsvn .tar.gz from [http://pypi.python.org/pypi/hgsvn/ http://pypi.python.org/pypi/hgsvn/]
+
+To install hgsvn:
+* run the setuptools installer
+* unzip hgsvn package
+* open command prompt and cd to directory where hgsvn was unzipped
+* give command: <code>python setup.py install</code>
+
+After the setup finishes, hgsvn binaries are found from <code>[Python installation folder]\Scripts</code>.
+
+= Pulling from SVN =
+Create a folder for repository and cd to it in command prompt.
+
+To initialize the repository, run command:
+* <code>hgimportsvn.exe -r5500 http://winmerge.svn.sourceforge.net/svnroot/winmerge/trunk/</code>
+
+which initializes the WinMerge trunk from revision 5500. You can pull from earlier versions too, like 3600 or so to start from first 2.7.x commits. Just remember that pulling thousands of revisions takes lots to time (hours, pulling whole repository may take over 12 hours). And usually you don't need the whole history.
+
+To get the SVN revisions, cd to trunk folder and run command:
+* <code>hgpullsvn</code>

@@ -1,0 +1,50 @@
+Our changelog file resides in
+ /Docs/Users/ChangeLog.txt
+
+Purpose of the changelog is to keep track of important changes for '''users'''. Changelog is copied into our release notes and the file is installed with WinMerge. So the changelog should be in format users understand, and must use language users understand. Users look into our changelog and determine if they need to update to new release.
+
+== What to Add to Changelog? ==
+There are no strict rules. Changelog should contain:
+* all user-visible changes
+* new features
+* important bug fixes
+* list of updated translations
+* documentation updates
+
+Things to not add to changelog:
+* code cleanups
+* minor GUI changes (adding accelerator keys, fixing layout, fixing typos etc)
+* minor bug fixes
+* file/folder renames and movings
+
+== Updating Changelog ==
+The changelog is not updated in every commit. Many commits don't need changelog entry, like explained in [[#What to Add to Changelog|What to Add to Changelog]].
+
+Usually it is good to add changelog entry when doing a first commit for a feature or a bugfix. Of course you don't know the revision number while committing, but you can add it in separate commit. When doing more commits to same feature or bugfix, just add new revision numbers to same entry.
+
+== Changelog Format ==
+
+Changelog is formatted for reading (not for technical details). Changelog has release version number and related changes listed. The format is:
+ WinMerge x.x.x.x
+   New Feature
+   Other Change
+   BugFix: Fixed bug
+
+After every line there can be either revision number or [[Trackers|tracker]] item number.
+ Added new file filter for SQL (r4516)
+ BugFix: Fixed a common crash (#144273)
+
+Example changelog:
+ WinMerge 2.7.5.1
+   New HTML reporting (r4514, r4517)
+   Small improvement to patching dialog layout
+   BugFix: Location pane is slow for big files (#1231234)
+
+== Keywords ==
+
+It is preferred to use [[Trackers#Keywords|keywords]] to describe which part of WinMerge is changed, if it is not clear from the message itself. For example:
+ WinMerge 2.7.5.2
+   Manual: Add info about patch dialog
+
+== For Developers ==
+Developers can see detailed changelogs as SVN logs. For example TortoiseSVN allows looking at log directly from many dialogs.

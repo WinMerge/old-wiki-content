@@ -1,0 +1,65 @@
+Currently we have the following ''Syntax Highlight Rules'' for [[CrystalEditor]]:
+
+{| class="wikitable" border="1"
+! Language !! file extensions
+|-
+| Plain || txt,doc,diz
+|-
+| ASP || asp
+|-
+| Basic || bas,vb,vbs,frm,dsm,cls,ctl,pag,dsr
+|-
+| Batch || bat,btm,cmd
+|-
+| C || c,cc,cpp,cxx,h,hpp,hxx,hm,inl,rh,tlh,tli,xs
+|-
+| C# || cs
+|-
+| CSS || css
+|-
+| DCL || dcl,dcc
+|-
+| Fortran || f,f90,f9p,fpp,for,f77
+|-
+| HTML || html,htm,shtml,ihtml,ssi,stm,stml,jsp
+|-
+| INI || ini,reg,vbp
+|-
+| InnoSetup || iss,isl
+|-
+| InstallShield || rul
+|-
+| Java || java,jav,js
+|-
+| AutoLISP || lsp,dsl
+|-
+| NSIS || nsi,nsh
+|-
+| Pascal || pas
+|-
+| Perl || pl,pm,plx
+|-
+| PHP || php,php3,php4,php5,phtml
+|-
+| Python || py
+|-
+| REXX || rex,rexx
+|-
+| Resources || rc,dlg,r16,r32,rc2
+|-
+| Ruby || rb,rbw,rake,gemspec
+|-
+| Sgml || sgml
+|-
+| Shell || sh,conf
+|-
+| SIOD || scm
+|-
+| SQL || sql
+|-
+| TCL || tcl
+|-
+| TEX || tex,sty,clo,ltx,fd,dtx
+|-
+| XML || xml
+|}

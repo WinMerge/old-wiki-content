@@ -1,0 +1,113 @@
+''This is preliminary planning still, suggestions and ideas are welcome. Please use [http://winmerge.org/support/mailing-lists.php development-mailing-list] for discussion about this topic.''
+
+It is now clear this won't be happening for next stable release (2.8). The goal is good but we don't have time or resources. Most improvements we do help also in this goal, and we should keep this goal in mind. But it is more important to solve some long-time problems first.
+
+== Why Compare Library ==
+For lots of reasons, really. WinMerge has been originally built as a GUI for [[diffutils]]. Diffutils really is not a optimal compare engine for all compare usages. Far from that. Recent WinMerge versions have added new Quick Compare and couple of file/folder time/size -attributes based compare methods. Mostly for compare speed.
+
+=== To allow different compare engines/methods ===
+As noted earlier, diffutils alone is not sufficent for different compare needs. We need a flexible set of different compare engines/methods for different needs.
+
+==== Compare lib extensions? ====
+Instead of the current plugin system it might be more sensible to allow extensions for Compare Library. This would allow people to write their custom compare code, not just pre-modify for current engine.
+
+=== Split backend and GUI ===
+We've been trying to split GUI code and backend code for a long time. But it seems if there is no clear stop-sign anywhere, people just forgot it and add dependencies back if it saves some time. So we go back and forth with this.
+
+Declaring that we have this Library, and there must not be GUI code in it would force us to keep GUI and backend code separated. Hacks just won't work anymore.
+
+==== Cross-platform ====
+Cross-platform is not a primary goal. But while we are at it, we should keep this in mind.
+
+=== Different GUIs ===
+Related to cross-platform. Currently WinMerge is MFC application. But porting (also) to other toolkits would be nice. The MFC GUI propably is our main GUI in short-term, but .Net/wxWidgets/Qt ports should be considered also.
+
+=== Easier development ===
+Compare code is the trickiest part of the WinMerge. But most of the changes are done outside of it, for the GUI code. So by separating the compare code to own module we make WinMerge code a lot more easier to approach and modify. Likewise, changes to compare code are easier to done as there are no ugly dependencies to GUI.
+
+=== Testing ===
+We need to create a good set of unit-tests for compare code. Currently it is hard to do since there is no clear API to use for it. It is very hard and time-consuming even trying to test different compare situations via WinMerge GUI. Yes, there are Perry's [[Self-tests]] but they operate on wrong level - from the top-level.
+
+== Tasks ==
+Primary task is of course comparing file and folders and produce list of differences. However there are lots of details in this, and some important supporting tasks also.
+
+=== Folder compare ===
+Folder compare must compare contents of two given folders. As with current WinMerge implementation, there must be two modes:
+* including subfolders ("flat") compare
+* just contents of given folder
+** Though it would be good enchanchement to optionally look for couple of levels in subfolders to give an user some idea whats inside them. That must not take too much time (do in separate background thread?).
+
+For folder compare WinMerge currently creates a list of files and folders it finds. Then it adds difference information for every item while it proceeds the compare. While WinMerge reads the files and folders it also reads other related info like file sizes and timestamps.
+
+==== Threading ====
+Current implementation uses one compare-thread for comparing. That thread is started when compare starts and runs the compare code. It might make sense to allow more threads. Maybe compare every subfolder in own threads (if it is flat compare)?
+
+One migh say threading does not belong to Compare Lib. But I (kimmov) think it does. Compare Lib user's should not need to care about threading. Compare Lib can decide best threading models for different compare cases. E.g. we may want different threading for flat compare of several subfolders and compare of just one subfolder contents.
+
+Compare Lib needs to signal users about its progress. WinMerge needs compare status dialog for folder compare.
+
+=== File compare ===
+File compare must compare contents of two given files.
+
+For file compare WinMerge currently produces Diffutils' internal difference list (script). GUI then parses that list and marks lines in filebuffers and GUI accordingly.
+
+'''This is important:''' Which kind of difference lists we want/need?
+
+One thing to consider is if we want line-based or char (line + char pos) -based differences from library to GUI. Current line-based approach works good. But then GUI needs to do in-line -differencing using other code. Also, none of our current compare engines produces char-based diffs.
+
+''Move stringdiffs implementation to compare lib?''
+
+=== Filtering ===
+This is area where there is a lot of misundertandings possible. So first thing we want to do is to define the filtering as we understand it.
+
+Basic case of filtering is for ignoring (not removing!) defined part of the results:
+* in folder compare we ignore items we don't want to compare
+* in file compare we ignore differences we don't want to see/handle
+
+So filtering
+* does not alter the original set of results (add/remove/alter items in it)
+* produces a subset for original set (does not add new items not existing in original set)
+
+==== File Filtering ====
+File filtering allows user to define the set of compared items in folder compare. The user can include or exclude items to/from the compare. There are two important objectives in this:
+# reducing the amount of compared items reduces the compare time (don't waste time comparing items you don't care if they are identical or different)
+# makes folder comapare results easier to handle by hiding unnecessary items.
+
+The current implementation is based on lists of regexps which either include or exclude items. We should allow new implementation to do both inclusion and exlusion.
+
+==== Line Filtering ====
+Line filtering allows user to ignore differences in files he doesn't want to handle/see. For example comment lines in the code files. 
+
+Current implementation is pretty dummy, it just gives regexps to diffutils which does the filtering. We have customized the diffutils so it marks differences that match to regexp as trivial. Then GUI knows to mark them ignored.
+
+Better and more flexible approach for this basic filtering would be to do our own post-processing for differences. One pros for doing filtering post compare are:
+# speed - it is faster to handle and match few differences and lines in them than trying to match all lines in compared files.
+# we can strip EOL bytes from lines before filtering so EOL byte issues get solved
+
+In more advanced cases we can combine (line) filtering with transformations.
+
+==== Additional notes ====
+We need a '''single''' way to specify filters for both compare types. Regular expressions are powerful tool for this. (''Note: GUI may want to offer easier ways than regular expressions, but GUI then converts them to regular expressios to compare library.'') So list of regular expressions are probably the best choice.
+
+=== Transformations ===
+Transformations are separate feature from filtering. But transformations can use filtering (code, not the feature?) to select the data to transform.
+
+Transformation means altering the compare data. Transformation can happen before and/or after the compare. Current plugins implement different transformations. Like comparing MS Word files.
+
+== Features ==
+=== Unicode support ===
+Supporting UTF-8 in compare-lib looks like a best approach. Other platforms can handle it, not just Windows. And it has wide support in other libraries we might want to use.
+
+=== Codepages ===
+This is pretty important, but hard subject. Using some external library might be easiest.
+
+=== Patch files ===
+Does this belong to compare-lib? I (kimmov) think it does. Producing or applying patch files outside compare library would be a lot harder, if not impossible.
+
+== Limitations ==
+Some of limitations I think we should just live with:
+* no 3-way compare. Lets first get 2-way compare working. Though we should not prevent implementing 3-way compare later.
+* no compare over net (ftp, http..). That is, compare library wants local files/folders at start. Maybe this can be later enchanced though.
+
+== APR ==
+[http://apr.apache.org/ APR] (The Apache Portable Runtime) looks like an excellent library to be used with Compare Library. It offers lots of filesystem, string handling, etc low level functionality for free. In project like WinMerge this is significant, we don't need to spend our time debugging code somebody else has already done. Also APR seems to be able to help with Unicode and codepages (which are all but easy subjects).

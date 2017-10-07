@@ -1,0 +1,20 @@
+= Available Engines =
+WinMerge utilizes two compare-engines:
+* [[Diffutils|GNU diffutils]] is the traditional tool familiar for lots of developers
+* [[Quick Compare]] was implemented for WinMerge as a faster folder compare method
+
+Third compare engine is [[String Differencing]].
+
+== Engines Compared ==
+
+There are some big differences in these engines:
+* diffutils is always used for file compare as quick compare only tells if files are identical or different
+* diffutils can use file filters (regexps) but quick compare cannot use them
+* using diffutils causes files to be loaded twice to buffers which eats lots of memory, but quick compare only loads small parts of files at a time. So diffutils can compare only rather small files efficiently while quick compare is fast for very big files too.
+
+In addition to these two, there are methods that don't compare file contents but their attributes:
+* Compare by date compares file times, which is very fast. This method is not reliable in all cases but when user can be sure later filetime means changed file, this is the fastest method.
+* Compare by size compares file sizes. This is also very fast, but not reliable in all cases. In cases like logs where changed file must be bigger this is fast method.
+* Compare by date and size is combination of above two. It first checks if file times match and only if times match checks also sizes.
+
+Compare by date and size are done in CompareDiffItem() function in DirScan.cpp.

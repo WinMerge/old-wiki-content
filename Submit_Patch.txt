@@ -1,0 +1,108 @@
+We always appreciate when people send patches to improve WinMerge. But there are certain rules every patch submission should follow to get it accepted into WinMerge.
+
+# The patch much have a clear target (fix a bug, add new feature, improve feature..).
+#* If there is no, or submitter can't describe, meaning for the patch, why bother submitting random code?
+# The patch should do one thing, and do it good.
+#* Always separate cleanups from bug fixes and new features. Cleanups are usually trivial patches that can be applied without much review. But bug fixes and new features may need lots of testing first.
+#* We have a version control, and we want track our code. One bugfix or feature per patch. Patches having many bugfixes and/or features mixed are very hard to track later. And if one part is buggy, separating might be a hard task for others.
+# Patch must have a proper description. Why was something done?
+# Patch must follow our [[Coding Guidelines|coding guidelines]].
+#* We are not interested in changing the coding style even if you don't like our style.
+#* Especially note different style in some parts of code (e.g. Editlib).
+
+
+<div class="warning">Do not copy/paste complex patches to patch tracker item text field! Sf.net breaks code indenting, and if somebody copies the patch text and tried to apply it, it won't work. Attach the patch as a text file instead (<code>.diff</code> or <code>.patch</code> extension).
+</div>
+
+
+= Version to Patch? =
+Always submit the patch against the latest version of WinMerge you can get!
+
+The best is if you can get a current development sources from subversion and submit a patch against those. If you can't get code from subversion, use the latest beta/experimental release available in downloads page.
+
+It might be tempting to submit a patch against latest stable release (e.g. 2.6.8) instead of development releases. However the fact is there may be months of development done after the stable branch was created. So the development code may be totally different in stable release and in development series. And lastly, patches are always first applied to development versions, so it must be ported to development code anyway before committing to subversion.
+
+= Before Submitting the Code =
+If you want to submit a patch for applying into WinMerge, make sure your code is good for submitting:
+* code is clean, no temporary hacks or debug code, no commented out code etc
+* there are doxygen comments (please help us by documenting your code)
+* code follows our [[Coding Guidelines|coding guidelines]]
+
+== Work in Progress (or Proof Of Concept) -patch ==
+If you have some good ideas, or want to some major changes, it is best to keep others updated by submitting some work-in-progress (WIP) patches for others to look at and review. Earlier you submit, earlier you get comments about your ideas.
+
+These patches are not for applying, so you don't need to clean them. Idea is important, not the coding style with them.
+
+= Creating the Patch =
+We accept patches as:
+# Patch files produced by GNU patch or TortoiseSVN (there is a small difference)
+# As changed files zipped, but then it must apply to latest sources (and you must tell the version!)
+# As original and changed files zipped
+
+For simple few lines patches the first method is best. And the patch is easy and fast to create with Subversion client like TortoiseSVN. Remember:
+# attach patch file itself
+# create a patch from root level folder so that full paths are visible in patch. There are similar filenames in different folders.
+
+<div class="note">Please submit TortoiseSVN generated patches only against latest Subversion revisions. TortoiseSVN has real problems applying patches against older revisions and it seems to fail frequently in it. Failed patch applying only wastes time.</div>
+
+
+When creating ''traditional'' patch (GNU diff-style) please use these settings:
+* unified style/format (-U)
+* at least three (preferably 5 or more) lines of context
+* create patch from WinMerge top-level folder so the full path is visible (in case we happen to have similar folder- and filenames)
+
+Another way to submit simple patches is to zip changed files to zip file. Please keep the folder structure when doing so. Easiest way to create these patches is to compare unaltered WinMerge source folder and altered source folder with WinMerge and use ''Copy To..'' function to copy different files to separate folder. Or if you are using TortoiseSVN, copy files which TortoiseSVN has marked altered to another folder.
+
+Preferred way to create patches is to add original and altered files into same zip file. If files are in folders named ''Original'' and ''Altered'' WinMerge can open the zip file and directly compare files. This makes reviewing patches a lot faster.
+
+Create a folder structure like this:
+:Patch_doing_something
+::Original
+:::Src
+::Altered
+:::Src
+
+Copy files to Src folder and create a zip so that ''Original'' and ''Altered'' folders are top-level folders in the zip.
+
+= Submit a New Patch Item =
+Create a new patch item to [http://patches.winmerge.org/ Patch Tracker].
+
+When writing a description, remember to:
+# tell against which version the patch is. Otherwise we assume it is against current SVN trunk and are unhappy if the patch doesn't apply to it.
+# Add references (links) to related tracker items. If you are fixing a bug, add a link to bug item! You can use [[Tracker shortcuts|tracker shortcuts]] for linking to other tracker items.
+# Describe what the patch does. Remember we may need to look at your descriptions later. So what is obvious at the moment of submission, is not obvious later.
+
+If you are creating new GUI (dialog, menu, etc), please attach a screenshot. Don't attach big whole screen shots, but crop the image to show the new or changed part.
+
+<div class="note">SourceForge.net has size limit of 250 kB for attachments.
+</div>
+
+Remember when attaching a file:
+* use good and descriptive filenames. <code>fix.patch</code> is not good filename, people may have tens of patches in their folders. For the same reason <code>bug.png</code> is not good filename for the screenshot. Add item number to filename if you can't figure out other filename <code>Patch_1234567.patch</code>
+* if you attach updated file, use different filename
+* if you zip files, use common formats: .zip or .7z. This way everybody can open the archive.
+
+= After the Submit =
+
+<div class="warning">Do not run away!
+If we are not happy with your patch, you need to listen to our feedback and fix/modify the patch. We probably don't have a time to do that job for you. If you don't care about your patch, it might not get into WinMerge.
+</div>
+
+Getting patch into WinMerge is not always easy. You may need to modify and re-submit your patch several times. Be prepared for that.
+
+= Reviewing and Committing =
+The patch needs to be reviewed by one of the [[Developers|developers]].
+
+Once the developer is happy with the patch, it gets [[Commit Patch|committed]] to the repository. New entry to [[ChangeLog|changelog]] is added if needed. If you are new submitter, then your name will be added to contributors list.
+
+=Monitoring for Bug Reports=
+So the patch got into our repository. You definitely still are not done with it yet! There can be bugs and/other side-effects caused by the patch. If you are a responsible developer, you'll want to look at our bug tracker for possible bugs reported.
+
+Sometimes we may even revert the patch from the repository if it seems there are no proper fixes for the bugs/problems. If the bugs/problems are solved later, we can apply the corrected patch later. But it is not automatic.
+
+= Trivial Patches =
+If the patch contains only code cleanups, comment fixes or other minor changes, it is called as a ''trivial patch''.
+
+If you are a developer, then just commit the changes into SVN with proper commit comment. Don't bother submitting trivial patches to patch tracker, it is just waste of time.
+
+If you are not yet a developer, then you need to [[Submit Patch|submit the patch]] into the patch tracker. Please mention that the patch is trivial in the patch description, and preferably add a ''trivial'' [[Trackers#Keywords|keyword]] to the summary.
